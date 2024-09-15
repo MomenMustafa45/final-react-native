@@ -16,7 +16,8 @@ import { createUserWithEmailAndPassword } from "firebase/auth";
 import { ParentType, StudentType, TeacherType } from "../utils/types";
 import { Dispatch } from "@reduxjs/toolkit";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
-import { toast } from "react-toastify";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
 export const saveLoggedUser = async (
   userId: string,
   dispatch: Dispatch,
@@ -26,7 +27,7 @@ export const saveLoggedUser = async (
     const userDocRef = doc(db, role, `${userId}`);
     const userDocSnap = await getDoc(userDocRef);
     if (userDocSnap.exists()) {
-      localStorage.setItem(
+      await AsyncStorage.setItem(
         "userId",
         JSON.stringify(
           `${userDocSnap.data().id.toString().trim()} ${
@@ -160,11 +161,8 @@ export const addParent = async (value: ParentType, photo?: File) => {
         console.log(error);
       }
     });
-
-    toast.success(`${value.name} added successfully as a Parent`);
   } catch (error) {
     console.log(error);
-    toast.error("Failed to add a parent");
   }
 };
 
@@ -259,10 +257,7 @@ export const addStudent = async (value: StudentType, photo?: File) => {
     if (parent.length > 0) {
       addChildToParent(parent, user.uid);
     }
-
-    toast.success(`${name} added successfully as a Student`);
   } catch (error) {
-    toast.error("Failed to add a student");
     console.log(error);
   }
 };

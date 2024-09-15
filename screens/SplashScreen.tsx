@@ -1,54 +1,47 @@
 import { View, Text } from "react-native";
 import React, { useEffect } from "react";
-import Animated, {
-  useSharedValue,
-  withTiming,
-  useAnimatedStyle,
-} from "react-native-reanimated";
 import { CommonActions, useNavigation } from "@react-navigation/native";
 import { RootNavigationParamList } from "../navigation/Stack";
+import LottieView from "lottie-react-native";
+import { StackNavigationProp } from "@react-navigation/stack";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
+type SplashScreenNavigationProp = StackNavigationProp<
+  RootNavigationParamList,
+  "Splash"
+>;
 
 const SplashScreen = () => {
-  const navigation = useNavigation<RootNavigationParamList>();
+  const navigation = useNavigation<SplashScreenNavigationProp>();
 
-  const opacityAnimation = useSharedValue(0);
+  const handleUserId = async () => {
+    const userLogged = await AsyncStorage.getItem("userId");
 
-  const config = {
-    duration: 2000,
-  };
-
-  const style = useAnimatedStyle(() => {
-    return {
-      opacity: opacityAnimation.value,
-    };
-  });
-
-  // const handleUserId = async () => {
-  //   const userInfo = await AsyncStorage.getItem("userInfo");
-
-  //   if (!userInfo) {
-  //     navigation.dispatch(
-  //       CommonActions.reset({ index: 0, routes: [{ name: "Landing" }] })
-  //     );
-  //   } else {
-  //     navigation.dispatch(
-  //       CommonActions.reset({ index: 0, routes: [{ name: "Home" }] })
-  //     );
-  //   }
-  // };
-
-  useEffect(() => {
-    opacityAnimation.value = withTiming(1, config);
-    const autoNavigate = setTimeout(() => {
+    if (!userLogged) {
+      navigation.dispatch(
+        CommonActions.reset({ index: 0, routes: [{ name: "Login" }] })
+      );
+    } else {
       navigation.dispatch(
         CommonActions.reset({ index: 0, routes: [{ name: "Home" }] })
       );
-    }, 3100);
+    }
+  };
+
+  useEffect(() => {
+    const autoNavigate = setTimeout(() => {
+      handleUserId();
+    }, 4000);
     return () => clearTimeout(autoNavigate);
   }, []);
   return (
-    <View>
-      <Text>SplashScreen</Text>
+    <View className="flex-1 items-center justify-center bg-[#CECED0]">
+      <LottieView
+        source={require("../assets/icons/animation-splash-three.json")}
+        style={{ width: "100%", height: "100%" }}
+        autoPlay
+        loop
+      />
     </View>
   );
 };

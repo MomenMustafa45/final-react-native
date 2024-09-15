@@ -1,18 +1,21 @@
 import { StatusBar } from "expo-status-bar";
-import { StyleSheet, Text, View } from "react-native";
+import { Platform, SafeAreaView, StyleSheet, Text, View } from "react-native";
 import { Provider } from "react-redux";
 import { Store } from "./Redux/Store";
+import StackNavigation from "./navigation/Stack";
+import { NavigationContainer } from "@react-navigation/native";
 
 export default function App() {
   return (
-    <View style={styles.container}>
-      <Provider store={Store}>
-        <Text className="text-white text-3xl bg-black">
-          Open up App.tsx to start working on your asdasdws!
-        </Text>
-        <StatusBar style="auto" />
-      </Provider>
-    </View>
+    <Provider store={Store}>
+      <SafeAreaView
+        style={{ flex: 1, paddingTop: Platform.OS == "android" ? 25 : 0 }}
+      >
+        <NavigationContainer>
+          <StackNavigation />
+        </NavigationContainer>
+      </SafeAreaView>
+    </Provider>
   );
 }
 
