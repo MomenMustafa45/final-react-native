@@ -13,7 +13,7 @@ import { db } from "../config/firebase";
 import { Dispatch } from "@reduxjs/toolkit";
 import { setSubject } from "../Redux/Slices/subjectSlice";
 import { SubjectType } from "../utils/types";
-import { toast } from "react-toastify";
+// import { toast } from "react-toastify";
 import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
 
 export const addSubject = async (subjectData: {
@@ -53,7 +53,7 @@ export const addSubject = async (subjectData: {
 
     console.log("Subject added and teacher updated with the new subject");
   } catch (error) {
-    toast.error("Error adding subject");
+    // toast.error("Error adding subject");
     console.error("Error adding subject: ", error);
   }
 };

@@ -5,6 +5,8 @@ import { RootNavigationParamList } from "../navigation/Stack";
 import LottieView from "lottie-react-native";
 import { StackNavigationProp } from "@react-navigation/stack";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { getUserById } from "../services/userServices";
+import { useAppDispatch } from "../hooks/reduxHooks";
 
 type SplashScreenNavigationProp = StackNavigationProp<
   RootNavigationParamList,
@@ -13,6 +15,7 @@ type SplashScreenNavigationProp = StackNavigationProp<
 
 const SplashScreen = () => {
   const navigation = useNavigation<SplashScreenNavigationProp>();
+  const dispatch = useAppDispatch();
 
   const handleUserId = async () => {
     const userLogged = await AsyncStorage.getItem("userId");
@@ -22,10 +25,13 @@ const SplashScreen = () => {
         CommonActions.reset({ index: 0, routes: [{ name: "Login" }] })
       );
     } else {
+      getUserById(userLogged, dispatch);
+      console.log(userLogged);
       navigation.dispatch(
         CommonActions.reset({ index: 0, routes: [{ name: "Home" }] })
       );
     }
+    console.log(userLogged);
   };
 
   useEffect(() => {

@@ -1,31 +1,33 @@
 import { View, Text, StyleSheet, ImageBackground } from "react-native";
-import React from "react";
-import { Avatar } from "@rneui/themed";
+import React, { useEffect } from "react";
+import { Avatar, ButtonGroup } from "@rneui/themed";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { TouchableOpacity } from "react-native-gesture-handler";
-import { useAppDispatch } from "../hooks/reduxHooks";
+import { CommonActions, useNavigation } from "@react-navigation/native";
+import { RootNavigationParamList } from "../navigation/Stack";
+import { Button } from "react-native-paper";
+import { useDispatch } from "react-redux";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { resetUser } from "../Redux/Slices/userSlice";
 import { signOut } from "firebase/auth";
 import auth from "../config/firebase";
-import { CommonActions, useNavigation } from "@react-navigation/native";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useAppDispatch, useAppSelector } from "../hooks/reduxHooks";
+
 const Home = () => {
-  const dispatch = useAppDispatch();
-  const navigate = useNavigation();
+  const userInfo = useAppSelector((state) => state.user.user);
+
+  const navigation = useNavigation<RootNavigationParamList>();
 
   const arr = [
-    { iconName: "", text: "Subjects" },
-    { iconName: "rocket", text: "salma" },
-
-    { iconName: "rocket", text: "salma" },
-
-    { iconName: "rocket", text: "salma" },
-
-    { iconName: "rocket", text: "salma" },
-
-    { iconName: "rocket", text: "salma" },
+    { iconName: "book", text: "Subjects", screen: "Subjects" },
+    { iconName: "table", text: "Routine Table",screen :"routine"  },
+    { iconName: "question", text: "Quiz" ,screen :"quiz" },
+    { iconName: "bar-chart", text: "Grades",screen :"grade"  },
+    { iconName: "user", text: "Staff",screen :"staff"  },
+    { iconName: "phone", text: "Contact Us" ,screen :"contact" },
   ];
-
+  const dispatch=useAppDispatch();
+  const navigate=useNavigation();
   const handleLogout = async () => {
     try {
       console.log("logout fun");
@@ -40,6 +42,7 @@ const Home = () => {
     } catch (error) {
       console.error("Error logging out: ", error);
     }
+  
   };
   return (
     <ImageBackground
@@ -48,26 +51,24 @@ const Home = () => {
     >
       <View style={styles.container}>
         <View style={styles.greetingContainer}>
-          <Text style={styles.greetingText}>Hi Salma</Text>
+        <Text style={styles.greetingText}>Hi {userInfo.name}</Text>
+
+       <Button  onPress={handleLogout}>log out</Button>
 
           <Avatar
             size={32}
             rounded
-            source={{ uri: "https://randomuser.me/api/portraits/men/36.jpg" }}
+            source={{ uri:userInfo.photoURL}}
           />
-          <TouchableOpacity
-            onPress={() => {
-              handleLogout();
-            }}
-          >
-            <Text>Logout</Text>
-          </TouchableOpacity>
         </View>
 
         <View style={styles.cardContainer}>
-          {[...arr].map((item, index) => (
-            // <TouchableOpacity></TouchableOpacity>
-            <View key={index} style={styles.card}>
+          {arr.map((item, index) => (
+            <TouchableOpacity
+              key={index}
+              style={styles.card}
+              onPress={() => navigation.navigate(item.screen)}
+            >
               <View style={styles.iconContainer}>
                 <Icon
                   name={item.iconName}
@@ -77,7 +78,7 @@ const Home = () => {
                 />
                 <Text style={styles.cardText}>{item.text}</Text>
               </View>
-            </View>
+            </TouchableOpacity>
           ))}
         </View>
       </View>
@@ -90,7 +91,7 @@ const styles = StyleSheet.create({
     flex: 1,
     resizeMode: "cover",
     margin: 0,
-    padding: 0, // Ensures the background image covers the whole area
+    padding: 0,
   },
   container: {
     flex: 1,
@@ -108,10 +109,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     fontSize: 20,
     marginBottom: 10,
-  },
-  avatarRow: {
-    flexDirection: "row",
-    gap: 10, // You can replace this with margin in older React Native versions
+    marginLeft:60
   },
   cardContainer: {
     flexDirection: "row",
