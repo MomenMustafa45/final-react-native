@@ -12,6 +12,8 @@ import { resetUser } from "../Redux/Slices/userSlice";
 import { signOut } from "firebase/auth";
 import auth from "../config/firebase";
 import { useAppDispatch, useAppSelector } from "../hooks/reduxHooks";
+import { Header } from "@react-navigation/stack";
+import Headero from "./components/Header";
 
 const Home = () => {
   const userInfo = useAppSelector((state) => state.user.user);
@@ -24,7 +26,11 @@ const Home = () => {
     { iconName: "question", text: "Quiz" ,screen :"quiz" },
     { iconName: "bar-chart", text: "Grades",screen :"grade"  },
     { iconName: "user", text: "Staff",screen :"staff"  },
-    { iconName: "phone", text: "Contact Us" ,screen :"contact" },
+    { iconName: "phone", text: "Ask Doubts" ,screen :"contact" },
+    { iconName: "image", text: "School gallary" ,screen :"gallary" },
+    // { iconName: "sign-out", text: "Log out " ,screen :"Login" },
+
+
   ];
   const dispatch=useAppDispatch();
   const navigate=useNavigation();
@@ -49,18 +55,9 @@ const Home = () => {
       source={require("../assets/images/home-bg.jpeg")} // Use require for local images
       style={styles.background}
     >
+      {/* <Headero/> */}
       <View style={styles.container}>
-        <View style={styles.greetingContainer}>
-        <Text style={styles.greetingText}>Hi {userInfo.name}</Text>
-
-       <Button  onPress={handleLogout}>log out</Button>
-
-          <Avatar
-            size={32}
-            rounded
-            source={{ uri:userInfo.photoURL}}
-          />
-        </View>
+       
 
         <View style={styles.cardContainer}>
           {arr.map((item, index) => (

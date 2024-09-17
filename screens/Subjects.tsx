@@ -6,12 +6,12 @@ import {
   FlatList,
   ImageBackground,
   StyleSheet,
+  Image, // Import Image from 'react-native'
 } from "react-native";
 import { useDispatch } from "react-redux";
 import { fetchSubjectsByLevel } from "../services/subjectServices";
 import { useAppSelector } from "../hooks/reduxHooks";
 import { useNavigation } from "@react-navigation/native";
-import { Image } from "@rneui/themed";
 
 function Subjects() {
   const [filteredSubjects, setFilteredSubjects] = useState([]);
@@ -23,29 +23,26 @@ function Subjects() {
     const loadSubjects = async () => {
       if (userInfo.class_id) {
         const data = await fetchSubjectsByLevel(userInfo.class_id);
-        setFilteredSubjects([...data]);
-        console.log(filteredSubjects);
+        setFilteredSubjects(data);
       }
     };
-
-    console.log(userInfo);
 
     loadSubjects();
   }, [userInfo.class_id]);
 
-  // دالة للتعامل مع الضغط على زر الاختبار
+  // Function to handle navigation to QuizScreen
   const handleButtonClick = (subjectId) => {
-    // navigation.navigate("QuizScreen", { subjectId });
+    navigation.navigate("QuizScreen", { subjectId });
   };
 
-  // دالة لعرض تفاصيل المادة
+  // Function to handle navigation to SubjectDetailsScreen
   const showDetails = (subjectId) => {
-    // navigation.navigate("SubjectDetailsScreen", { subjectId });
+    navigation.navigate("SubjectDetailsScreen", { subjectId });
   };
 
   return (
     <ImageBackground
-      source={require("../assets/images/home-bg.jpeg")} // Use require for local images
+      source={require("../assets/images/home-bg.jpeg")}
       style={styles.background}
     >
       <View style={styles.container}>
@@ -58,16 +55,27 @@ function Subjects() {
           keyExtractor={(item) => item.id.toString()}
           renderItem={({ item }) => (
             <TouchableOpacity
-            style={styles.card}
-            onPress={() => handleButtonClick(item.id)}
-          >
-            <View style={styles.iconContainer}>
-              <Text>{item.name}</Text>
-            </View>
-          </TouchableOpacity>
-          
+              style={styles.card}
+              onPress={() => handleButtonClick(item.id)}
+            >
+              <View style={styles.iconContainer}>
+                <Image
+                  style={styles.stretch}
+                  source={{ uri: item.photoURL }} // Use dynamic image URL
+                />
+                <Text style={styles.subjectName}>{item.name}</Text>
+                <Text style={styles.description}>{item.description}</Text>
+
+                <TouchableOpacity
+                  style={styles.materialsButton}
+                  onPress={() => showDetails(item.id)}
+                >
+                  <Text style={styles.materialsButtonText}>See Material</Text>
+                </TouchableOpacity>
+              </View>
+            </TouchableOpacity>
           )}
-          numColumns={2} // ترتيب العناصر في عمودين
+          numColumns={2}
           contentContainerStyle={styles.cardContainer}
         />
       </View>
@@ -90,39 +98,67 @@ const styles = StyleSheet.create({
     alignItems: "center",
     padding: 20,
   },
+  stretch: {
+    width: 100,  // Adjust width as needed
+    height: 100, // Adjust height as needed
+    resizeMode: 'cover', // Ensures the image covers the area without stretching
+  },
   greetingContainer: {
     marginBottom: 20,
     flexDirection: "row",
     gap: 20,
-    marginRight: 200,
   },
   greetingText: {
     fontWeight: "bold",
     fontSize: 20,
-    marginBottom: 10,
+    // marginBottom: 10,
   },
   cardContainer: {
     justifyContent: "center",
   },
   card: {
     backgroundColor: "#f5f6fc",
-    width: 150,
-    height: 150,
+    width: 340,
+    height: 300,
     borderRadius: 10,
     justifyContent: "center",
     alignItems: "center",
     margin: 10,
+    borderColor: "#9ca3af",
+    borderWidth: 1,
   },
   iconContainer: {
     alignItems: "center",
+    // padding: 15,
+    height:200
   },
-  icon: {
-    paddingTop: 10,
-    paddingBottom: 10,
-    color: "#345fb4",
-  },
-  cardText: {
+  subjectName: {
     fontWeight: "bold",
     color: "black",
+    fontSize: 20,
+    textAlign: "left",
+    marginBottom: 5,
+  },
+  description: {
+    color: "#6b7280",
+    fontSize: 14,
+    textAlign: "center",
+    // marginBottom: 10,
+    paddingHorizontal:5
+  },
+  materialsButton: {
+    marginTop: 10,
+    paddingHorizontal: 25,
+    paddingVertical: 15,
+    backgroundColor: "#1e40af",
+    borderRadius: 25,
+    width: '80%',
+    alignItems: 'center',
+  },
+  materialsButtonText: {
+    color: "#fff",
+    fontWeight: "bold",
+    fontSize: 16,
+    textAlign: "center",
   },
 });
