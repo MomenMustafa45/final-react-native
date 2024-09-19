@@ -77,7 +77,6 @@ const StudentRoutineTable = () => {
         ...schedule,
         days: updatedDays,
       });
-      console.log(scheduleTable);
     } catch (error) {
       console.log(error);
     }
@@ -85,7 +84,6 @@ const StudentRoutineTable = () => {
 
   useEffect(() => {
     getSchedule();
-    console.log(levelName);
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -99,11 +97,11 @@ const StudentRoutineTable = () => {
   }
 
   const renderScene = SceneMap({
-    monday: () => <DaySchedule day={scheduleTable.days[0]} />, // Adjust index for correct day
-    tuesday: () => <DaySchedule day={scheduleTable.days[1]} />,
-    wednesday: () => <DaySchedule day={scheduleTable.days[2]} />,
-    thursday: () => <DaySchedule day={scheduleTable.days[3]} />,
-    friday: () => <DaySchedule day={scheduleTable.days[4]} />,
+    monday: () => <DaySchedule day={scheduleTable["days"][0]} />, // Adjust index for correct day
+    tuesday: () => <DaySchedule day={scheduleTable["days"][1]} />,
+    wednesday: () => <DaySchedule day={scheduleTable["days"][2]} />,
+    thursday: () => <DaySchedule day={scheduleTable["days"][3]} />,
+    friday: () => <DaySchedule day={scheduleTable["days"][4]} />,
   });
 
   return (
@@ -111,6 +109,7 @@ const StudentRoutineTable = () => {
       source={require("../assets/images/Blue and Red Back to School Poster.png")}
       style={styles.background}
     >
+      <Text>Hello</Text>
       <TabView
         navigationState={{ index, routes }}
         renderScene={renderScene}
@@ -125,12 +124,28 @@ const DaySchedule = ({ day }) => (
   <ScrollView>
     <Text style={styles.title}>{day.dayName}</Text>
     <View style={styles.tableContainer}>
-      <Text style={styles.tableHeader}>7:00-9:00</Text>
-      {day.subjects.map((subject, index) => (
+      {day.subjects.map((subj, index) => {
+        return (
+          <>
+            <Text style={styles.tableHeader}>
+              {index == 0
+                ? "7:00-9:00"
+                : index == 1
+                ? "9:00-11:00"
+                : index == 2
+                ? "11:00-1:00"
+                : "1:00-3:00"}
+            </Text>
+            <Text key={index}>{subj.subject_name}</Text>
+            <Text>{subj.teacher_name.name}</Text>
+          </>
+        );
+      })}
+      {/* {day?.subjects?.map((subject, index) => (
         <Text key={index} style={styles.subject}>
           {subject.subject_name} ({subject.teacher_name})
         </Text>
-      ))}
+      ))} */}
     </View>
   </ScrollView>
 );
