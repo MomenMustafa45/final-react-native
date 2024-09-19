@@ -20,14 +20,14 @@ const Home = () => {
 
   const arr = [
     { iconName: "book", text: "Subjects", screen: "Subjects" },
-    { iconName: "table", text: "Routine Table",screen :"routine"  },
-    { iconName: "question", text: "Quiz" ,screen :"quiz" },
-    { iconName: "bar-chart", text: "Grades",screen :"grade"  },
-    { iconName: "user", text: "Staff",screen :"staff"  },
-    { iconName: "phone", text: "Contact Us" ,screen :"contact" },
+    { iconName: "table", text: "Routine Table", screen: "routine" },
+    { iconName: "question", text: "Quiz", screen: "quiz" },
+    { iconName: "bar-chart", text: "Grades", screen: "grade" },
+    { iconName: "user", text: "Staff", screen: "staff" },
+    { iconName: "phone", text: "Contact Us", screen: "contact" },
   ];
-  const dispatch=useAppDispatch();
-  const navigate=useNavigation();
+  const dispatch = useAppDispatch();
+  const navigate = useNavigation();
   const handleLogout = async () => {
     try {
       console.log("logout fun");
@@ -42,7 +42,6 @@ const Home = () => {
     } catch (error) {
       console.error("Error logging out: ", error);
     }
-  
   };
   return (
     <ImageBackground
@@ -51,15 +50,11 @@ const Home = () => {
     >
       <View style={styles.container}>
         <View style={styles.greetingContainer}>
-        <Text style={styles.greetingText}>Hi {userInfo.name}</Text>
+          <Text style={styles.greetingText}>Hi {userInfo.name}</Text>
 
-       <Button  onPress={handleLogout}>log out</Button>
+          <Button onPress={handleLogout}>log out</Button>
 
-          <Avatar
-            size={32}
-            rounded
-            source={{ uri:userInfo.photoURL}}
-          />
+          <Avatar size={32} rounded source={{ uri: userInfo.photoURL }} />
         </View>
 
         <View style={styles.cardContainer}>
@@ -109,7 +104,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     fontSize: 20,
     marginBottom: 10,
-    marginLeft:60
+    marginLeft: 60,
   },
   cardContainer: {
     flexDirection: "row",
