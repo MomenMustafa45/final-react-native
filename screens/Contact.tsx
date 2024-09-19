@@ -71,7 +71,7 @@ const styles = StyleSheet.create({
     width: '90%',
     padding: 16,
     borderRadius: 10,
-    backgroundColor: '#f8f4e5',
+    backgroundColor: '#f1f5f9',
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.3,
@@ -84,17 +84,17 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 24,
     fontWeight: 'bold',
-    color: '#800080',
+    color: '#002749',
     marginBottom: 8,
   },
   subTitle: {
     fontSize: 16,
-    color: '#ADD8E6',
+    color: '#f97316',
   },
   separator: {
     width: 60,
     height: 2,
-    backgroundColor: 'orange',
+    backgroundColor: '#002749',
     marginVertical: 10,
   },
   form: {
@@ -106,12 +106,12 @@ const styles = StyleSheet.create({
   label: {
     fontSize: 16,
     fontWeight: '600',
-    color: '#1E90FF',
+    color: '#ea580c',
     marginBottom: 4,
   },
   input: {
     width: '100%',
-    borderColor: '#ADD8E6',
+    borderColor: '#002749',
     borderWidth: 1,
     borderRadius: 6,
     padding: 10,
