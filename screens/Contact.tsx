@@ -1,7 +1,31 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
+import { addContact } from '../services/contactServices';
 
 const Contact = () => {
+  const [data, setData] = useState({
+    name: '',
+    email: '',
+    subject: '',
+    message: ''
+  });
+
+  const handleChange = (key, value) => {
+    setData({
+      ...data,
+      [key]: value
+    });
+  };
+
+  const sendContact = () => {
+    const currentDate = new Date().toISOString();
+    const contactData = {
+      ...data,
+      date: currentDate
+    };
+    addContact(contactData);
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.contactCard}>
@@ -17,6 +41,8 @@ const Contact = () => {
             <TextInput
               style={styles.input}
               placeholder="Enter your name"
+              value={data.name}
+              onChangeText={(text) => handleChange('name', text)}
               required
             />
           </View>
@@ -27,6 +53,8 @@ const Contact = () => {
               style={styles.input}
               placeholder="Enter your email"
               keyboardType="email-address"
+              value={data.email}
+              onChangeText={(text) => handleChange('email', text)}
               required
             />
           </View>
@@ -36,6 +64,8 @@ const Contact = () => {
             <TextInput
               style={styles.input}
               placeholder="Subject"
+              value={data.subject}
+              onChangeText={(text) => handleChange('subject', text)}
             />
           </View>
 
@@ -46,11 +76,13 @@ const Contact = () => {
               placeholder="Your message"
               multiline={true}
               numberOfLines={5}
+              value={data.message}
+              onChangeText={(text) => handleChange('message', text)}
               required
             />
           </View>
 
-          <TouchableOpacity style={styles.button}>
+          <TouchableOpacity onPress={sendContact} style={styles.button}>
             <Text style={styles.buttonText}>SEND MESSAGE</Text>
           </TouchableOpacity>
         </View>
@@ -58,7 +90,6 @@ const Contact = () => {
     </View>
   );
 };
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -134,4 +165,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Contact;
+export default Contact; 
