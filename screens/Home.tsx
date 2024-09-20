@@ -22,18 +22,16 @@ const Home = () => {
 
   const arr = [
     { iconName: "book", text: "Subjects", screen: "Subjects" },
-    { iconName: "table", text: "Routine Table",screen :"routine"  },
-    { iconName: "question", text: "Quiz" ,screen :"quiz" },
-    { iconName: "bar-chart", text: "Grades",screen :"grade"  },
-    { iconName: "user", text: "Staff",screen :"staff"  },
-    { iconName: "phone", text: "Ask Doubts" ,screen :"contact" },
-    { iconName: "image", text: "School gallary" ,screen :"gallary" },
+    { iconName: "table", text: "Routine Table", screen: "routine" },
+    { iconName: "question", text: "Quiz", screen: "quiz" },
+    { iconName: "bar-chart", text: "Grades", screen: "grade" },
+    { iconName: "user", text: "Staff", screen: "staff" },
+    { iconName: "phone", text: "Ask Doubts", screen: "contact" },
+    { iconName: "image", text: "School gallary", screen: "gallary" },
     // { iconName: "sign-out", text: "Log out " ,screen :"Login" },
-
-
   ];
-  const dispatch=useAppDispatch();
-  const navigate=useNavigation();
+  const dispatch = useAppDispatch();
+  const navigate = useNavigation();
   const handleLogout = async () => {
     try {
       console.log("logout fun");
@@ -48,7 +46,6 @@ const Home = () => {
     } catch (error) {
       console.error("Error logging out: ", error);
     }
-  
   };
   return (
     <ImageBackground
@@ -57,8 +54,6 @@ const Home = () => {
     >
       <Headero/>
       <View style={styles.container}>
-       
-
         <View style={styles.cardContainer}>
           {arr.map((item, index) => (
             <TouchableOpacity
@@ -106,7 +101,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     fontSize: 20,
     marginBottom: 10,
-    marginLeft:60
+    marginLeft: 60,
   },
   cardContainer: {
     flexDirection: "row",
