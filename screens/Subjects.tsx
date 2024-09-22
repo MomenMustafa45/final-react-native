@@ -37,7 +37,7 @@ function Subjects() {
 
   // Function to handle navigation to SubjectDetailsScreen
   const showDetails = (subjectId) => {
-    navigation.navigate("SubjectDetailsScreen", { subjectId });
+    navigation.navigate("SubjectDetails", { subjectId });
   };
 
   return (
@@ -119,7 +119,7 @@ const styles = StyleSheet.create({
   card: {
     backgroundColor: "#f5f6fc",
     width: 340,
-    height: 300,
+    height: 350,
     borderRadius: 10,
     justifyContent: "center",
     alignItems: "center",
@@ -154,6 +154,7 @@ const styles = StyleSheet.create({
     borderRadius: 25,
     width: '80%',
     alignItems: 'center',
+    marginBottom:50
   },
   materialsButtonText: {
     color: "#fff",

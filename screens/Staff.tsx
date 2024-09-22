@@ -83,12 +83,12 @@ const styles = StyleSheet.create({
   name: {
     fontSize: 18,
     fontWeight: 'bold',
-    marginBottom: 5,
+    // marginBottom: 5,
   },
   subject: {
     fontSize: 16,
-    color: '#666',
-    marginBottom: 10,
+    color: '#888',
+    // marginBottom: 10,
   },
   description: {
     fontSize: 14,
