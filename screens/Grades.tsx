@@ -1,52 +1,49 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, StyleSheet, FlatList, ImageBackground } from "react-native";
+import {
+  View,
+  Text,
+  Button,
+  ActivityIndicator,
+  StyleSheet,
+  ScrollView,
+  ImageBackground,
+} from "react-native";
+import { useDispatch, useSelector } from "react-redux";
+import { Picker } from "@react-native-picker/picker";
 import { useAppSelector } from "../hooks/reduxHooks";
-
+import { getKids } from "../Redux/Slices/KidsSlice";
 import { fetchSubjectsGrades } from "../services/gradeServices";
 
-const Grades = () => {
+const KidsGrades = () => {
+  const dispatch = useDispatch();
+  const kids = useSelector((state) => state.kids.kidsList);
   const userInfo = useAppSelector((state) => state.user.user);
+  const [selectedKid, setSelectedKid] = useState("");
   const [grades, setGrades] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    const fetchGrades = async () => {
+    const parentId = userInfo.id;
+    if (parentId) {
+      dispatch(getKids(parentId));
+    }
+  }, []);
+
+  const handleViewGrades = async () => {
+    if (selectedKid) {
+      setLoading(true);
       try {
-        setLoading(true);
-        const gradesArray = await fetchSubjectsGrades(userInfo.id);
-        setGrades(gradesArray);
+        const fetchedGrades = await fetchSubjectsGrades(selectedKid);
+        setGrades(fetchedGrades);
+        setError(null);
       } catch (error) {
-        setError("Failed to fetch grades.");
+        setError("Failed to fetch grades. Please try again.");
       } finally {
         setLoading(false);
       }
-    };
-    fetchGrades();
-  }, [userInfo.id]);
-
-  const calculatePercentage = () => {
-    if (grades.length === 0) {
-      return 0; // إذا لم يكن هناك درجات، النسبة ستكون 0
-    }
-    const totalGrades = grades.reduce((acc, grade) => acc + grade.grade, 0);
-    const maxTotalGrades = grades.length * 100; // أقصى درجات ممكنة
-    return Math.round((totalGrades / maxTotalGrades) * 100); // النسبة المئوية لأقرب عدد صحيح
-  };
-  
-
-  const getEvaluation = (percentage) => {
-    if (percentage >= 85) {
-      return "You are Excellent!";
-    } else if (percentage >= 70) {
-      return "You are Good!";
-    } else {
-      return "Keep Trying!";
     }
   };
-
-  const percentage = calculatePercentage();
-  const evaluation = getEvaluation(percentage);
 
   return (
     <ImageBackground
@@ -54,27 +51,49 @@ const Grades = () => {
       style={styles.background}
     >
       <View style={styles.container}>
-        {/* <Text style={styles.title}>My Grades</Text> */}
-        {loading ? (
-          <Text>Loading...</Text>
-        ) : error ? (
-          <Text style={styles.error}>{error}</Text>
-        ) : (
-          <View style={styles.gradeContainer}>
-            <Text style={styles.evaluation}>{evaluation}</Text>
-            {/* <Text style={styles.percentage}>{percentage}% </Text> */}
-            <FlatList
-              data={grades}
-              keyExtractor={(item, index) => index.toString()}
-              renderItem={({ item }) => (
-                <View style={styles.row}>
-                  <Text style={styles.subject}>{item.subjectName}</Text>
-                  <Text style={styles.grade}>{item.grade}</Text>
-                  <Text style={styles.quizScore}>{item.quizScore}</Text>
+        <Text style={styles.header}>My Kids</Text>
+
+        <View style={styles.form}>
+          <Picker
+            selectedValue={selectedKid}
+            onValueChange={(itemValue) => setSelectedKid(itemValue)}
+            style={styles.picker}
+          >
+            <Picker.Item label="Select a kid" value="" />
+            {kids.map((kid) => (
+              <Picker.Item key={kid.id} label={kid.name} value={kid.id} />
+            ))}
+          </Picker>
+
+          <Button title="VIEW" onPress={handleViewGrades} color="#002749" />
+        </View>
+
+        {loading && <ActivityIndicator size="large" color="#002749" />}
+
+        {error && <Text style={styles.error}>{error}</Text>}
+
+        {grades.length > 0 && (
+          <ScrollView>
+            <View style={styles.gradeContainer}>
+              <View style={styles.tableHeader}>
+                <Text style={styles.tableHeaderText}>Subject</Text>
+                <Text style={styles.tableHeaderText}>Grade</Text>
+              </View>
+
+              {grades.map((item) => (
+                <View key={item.id} style={styles.tableRow}>
+                  <Text style={styles.tableCell}>{item.subjectName}</Text>
+                  <Text style={styles.tableCell}>{item.quizScore}</Text>
+
+                  <Text style={styles.tableCell}>{item.grade}</Text>
                 </View>
-              )}
-            />
-          </View>
+              ))}
+            </View>
+          </ScrollView>
+        )}
+
+        {grades.length === 0 && !loading && !error && (
+          <Text>No grades available for the selected kid.</Text>
         )}
       </View>
     </ImageBackground>
@@ -90,13 +109,20 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 20,
     justifyContent: "center",
-    paddingTop:200
   },
-  title: {
-    fontSize: 30,
+  header: {
+    fontSize: 24,
     fontWeight: "bold",
     textAlign: "center",
+    marginBottom: 20,
     color: "#4A4A4A",
+  },
+  form: {
+    marginBottom: 20,
+  },
+  picker: {
+    height: 50,
+    width: "100%",
     marginBottom: 20,
   },
   gradeContainer: {
@@ -108,49 +134,29 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.3,
     shadowRadius: 5,
     elevation: 5,
-  
   },
-  evaluation: {
-    fontSize: 24,
-    fontWeight: "600",
-    textAlign: "center",
-    color: "#4CAF50", // لون مميز
-    marginBottom: 10,
+  tableHeader: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    backgroundColor: "#002749",
+    padding: 10,
   },
-  percentage: {
-    fontSize: 26,
+  tableHeaderText: {
+    color: "#fff",
     fontWeight: "bold",
-    textAlign: "center",
-    color: "#2196F3", // لون مميز
-    marginBottom: 20,
+    fontSize: 18,
   },
-  row: {
+  tableRow: {
     flexDirection: "row",
     justifyContent: "space-between",
     paddingVertical: 12,
     borderBottomWidth: 1,
     borderBottomColor: "#ccc",
   },
-  subject: {
-    fontSize: 18,
-    flex: 2,
-    color: "#333",
-  },
-  grade: {
+  tableCell: {
     fontSize: 18,
     flex: 1,
-    backgroundColor:"#e6efff",
     textAlign: "center",
-    color: "black", // لون مميز لنتيجة الاختبار
-    // لون مميز للدرجة
-  },
-  quizScore: {
-    fontSize: 18,
-    flex: 1,
-    backgroundColor:"#f0f9ee",
-
-    textAlign: "center",
-    color: "black", // لون مميز لنتيجة الاختبار
   },
   error: {
     color: "red",
@@ -158,4 +164,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Grades;
+export default KidsGrades;
