@@ -3,25 +3,16 @@ import { View, Text, StyleSheet, ImageBackground, FlatList } from "react-native"
 import { useRoute } from "@react-navigation/native"; // لاستخدام الـ Route
 import { Video } from 'expo-av';
 
-<Video
-  source={{ uri: videoUrl }}
-  rate={1.0}
-  volume={1.0}
-  isMuted={false}
-  resizeMode="cover"
-  shouldPlay
-  isLooping
-  style={{ width: 300, height: 300 }}
-/>
-
-import { getSubjectById } from "../services/subjectServices"; // استيراد خدمة الـ Firebase
+// استيراد خدمة الـ Firebase
+import { getSubjectById } from "../services/subjectServices";
 
 function SubjectDetails() {
   const route = useRoute();
-  const { subjectId } = route.params || {}; // الحصول على subjectId
+  const { subjectId } = route.params || {}; // الحصول على subjectId من الـ Route
   const [videos, setVideos] = useState([]);
   const [subject, setSubject] = useState(null);
 
+  // استخدام useEffect لجلب بيانات المادة بناءً على subjectId
   useEffect(() => {
     if (!subjectId) {
       console.error("No subjectId found in route.params");
@@ -33,7 +24,7 @@ function SubjectDetails() {
         const subjectData = await getSubjectById(id);
         if (subjectData) {
           setSubject(subjectData);
-          setVideos(subjectData.videoUrls || []);
+          setVideos(subjectData.videoUrls || []); // تعيين قائمة الفيديوهات
         } else {
           console.error("No subject data found!");
         }
@@ -46,12 +37,12 @@ function SubjectDetails() {
   }, [subjectId]);
 
   if (!subject) {
-    return <Text>Loading...</Text>; // Handle loading state
+    return <Text>Loading...</Text>; // التعامل مع حالة التحميل
   }
 
   return (
     <ImageBackground
-      source={{ uri: subject.photoURL }}
+      source={{ uri: subject.photoURL }} // خلفية الصفحة من صورة المادة
       style={styles.background}
       resizeMode="cover"
     >
@@ -61,13 +52,14 @@ function SubjectDetails() {
           <Text style={styles.description}>{subject.description}</Text>
         </View>
 
+        {/* عرض قائمة الفيديوهات باستخدام FlatList */}
         <FlatList
           data={videos}
           keyExtractor={(item, index) => index.toString()}
           renderItem={({ item }) => (
             <View style={styles.videoContainer}>
               <Video
-                source={{ uri: item }}
+                source={{ uri: item }} // عرض الفيديوهات من الروابط
                 style={styles.video}
                 controls={true} // أدوات التحكم بالفيديو
                 resizeMode="contain"
