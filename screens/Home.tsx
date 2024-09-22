@@ -52,7 +52,7 @@ const Home = () => {
       source={require("../assets/images/home-bg.jpeg")} // Use require for local images
       style={styles.background}
     >
-      {/* <Headero/> */}
+      <Headero/>
       <View style={styles.container}>
         <View style={styles.cardContainer}>
           {arr.map((item, index) => (

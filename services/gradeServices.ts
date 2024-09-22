@@ -21,7 +21,18 @@ export const fetchSubjectsGrades = async (student_id: string) => {
     const subjectGradeList = await Promise.all(
       gradeSnapshot.docs.map(async (gradeDoc) => {
         const gradeData = gradeDoc.data();
-        
+
+        // Check if subject_id is valid
+        if (!gradeData.subject_id) {
+          console.error("Missing subject_id for grade: ", gradeDoc.id);
+          return {
+            id: gradeDoc.id,
+            grade: gradeData.grade,
+            subjectName: "Unknown Subject",
+            quizScore: gradeData.quizScore,
+          };
+        }
+
         // Fetch subject document from 'subjects' collection
         const subjectRef = doc(db, "subjects", gradeData.subject_id);
         const subjectSnapshot = await getDoc(subjectRef);
@@ -35,7 +46,8 @@ export const fetchSubjectsGrades = async (student_id: string) => {
         return {
           id: gradeDoc.id,
           grade: gradeData.grade,
-          subjectName, // Add subject name here
+          subjectName,
+          quizScore: gradeData.quizScore,
         };
       })
     );

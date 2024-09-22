@@ -14,13 +14,14 @@ import { getSubjectNameById } from "../services/subjectServices";
 import { getTeacherNameById } from "../services/teacherServices";
 import { useAppSelector } from "../hooks/reduxHooks"; // Adjust path as needed
 import { Schedule } from "../utils/types";
+import Headero from "./components/Header";
 
 const renderTabBar = (props) => (
   <TabBar
     {...props}
-    indicatorStyle={{ backgroundColor: "#fff" }}
-    style={{ backgroundColor: "#fff" }}
-    labelStyle={{ color: "#000" }}
+    indicatorStyle={{ backgroundColor: "#fff" ,borderRadius:10}}
+    style={{ backgroundColor: "#fff" ,borderRadius:10,marginHorizontal:15}}
+    labelStyle={{ color: "#000",borderRadius:10 }}
     activeColor="#1e40af"
     inactiveColor="#000"
   />
@@ -29,11 +30,11 @@ const renderTabBar = (props) => (
 const StudentRoutineTable = () => {
   const [index, setIndex] = useState(0);
   const [routes] = useState([
+    { key: "sunday", title: "sun" },
     { key: "monday", title: "Mon" },
     { key: "tuesday", title: "Tues" },
     { key: "wednesday", title: "Wed" },
     { key: "thursday", title: "Thurs" },
-    { key: "friday", title: "Fri" },
   ]);
   const [scheduleTable, setScheduleTable] = useState<Schedule | null>(null);
   const [levelName, setLevelName] = useState<string>("");
@@ -91,25 +92,25 @@ const StudentRoutineTable = () => {
   if (!scheduleTable) {
     return (
       <View style={styles.loadingContainer}>
-        <ActivityIndicator size="large" color="#ff4e31" />
+        <ActivityIndicator size="large" color="#4c73be" />
       </View>
     );
   }
 
   const renderScene = SceneMap({
-    monday: () => <DaySchedule day={scheduleTable["days"][0]} />, // Adjust index for correct day
-    tuesday: () => <DaySchedule day={scheduleTable["days"][1]} />,
-    wednesday: () => <DaySchedule day={scheduleTable["days"][2]} />,
-    thursday: () => <DaySchedule day={scheduleTable["days"][3]} />,
-    friday: () => <DaySchedule day={scheduleTable["days"][4]} />,
+    sunday: () => <DaySchedule day={scheduleTable["days"][0]} />, // Adjust index for correct day
+    monday: () => <DaySchedule day={scheduleTable["days"][1]} />, // Adjust index for correct day
+    tuesday: () => <DaySchedule day={scheduleTable["days"][2]} />,
+    wednesday: () => <DaySchedule day={scheduleTable["days"][3]} />,
+    thursday: () => <DaySchedule day={scheduleTable["days"][4]} />,
   });
 
   return (
     <ImageBackground
-      source={require("../assets/images/Blue and Red Back to School Poster.png")}
+      source={require("../assets/images/home-bg.jpeg")}
       style={styles.background}
     >
-      <Text>Hello</Text>
+      <Headero></Headero>
       <TabView
         navigationState={{ index, routes }}
         renderScene={renderScene}
@@ -122,41 +123,31 @@ const StudentRoutineTable = () => {
 
 const DaySchedule = ({ day }) => (
   <ScrollView>
-    <Text style={styles.title}>{day.dayName}</Text>
+    {/* <Text style={styles.title}>{day.dayName}</Text> */}
     <View style={styles.tableContainer}>
       {day.subjects.map((subj, index) => {
+        const periodTime = index === 0
+          ? "7:00-9:00"
+          : index === 1
+          ? "9:00-11:00"
+          : index === 2
+          ? "11:00-1:00"
+          : "1:00-3:00";
+
         return (
-          <>
-            <Text style={styles.tableHeader}>
-              {index == 0
-                ? "7:00-9:00"
-                : index == 1
-                ? "9:00-11:00"
-                : index == 2
-                ? "11:00-1:00"
-                : "1:00-3:00"}
-            </Text>
-            <Text key={index}>{subj.subject_name}</Text>
-            <Text>{subj.teacher_name.name}</Text>
-          </>
+          <View key={index} style={styles.card}>
+            <Text style={styles.periodNumber}>Period {index + 1}</Text>
+            <Text style={styles.subjectName}>{subj.subject_name}</Text>
+            <Text style={styles.teacherName}>{subj.teacher_name.name}</Text>
+            <Text style={styles.periodTime}>{periodTime}</Text>
+          </View>
         );
       })}
-      {/* {day?.subjects?.map((subject, index) => (
-        <Text key={index} style={styles.subject}>
-          {subject.subject_name} ({subject.teacher_name})
-        </Text>
-      ))} */}
     </View>
   </ScrollView>
 );
 
 const styles = StyleSheet.create({
-  scene: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "#f5f5f5",
-  },
   background: {
     flex: 1,
   },
@@ -170,19 +161,41 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: "bold",
     marginVertical: 10,
+    padding: 30,
   },
   tableContainer: {
     width: "100%",
     paddingHorizontal: 20,
+    paddingVertical: 20,
   },
-  tableHeader: {
-    fontSize: 18,
-    fontWeight: "bold",
-    marginBottom: 10,
+  card: {
+    backgroundColor: "#f5f6fc",
+    borderRadius: 10,
+    padding: 15,
+    marginBottom: 20,
+    shadowColor: "#000",
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 2,
   },
-  subject: {
+  periodNumber: {
     fontSize: 16,
-    marginVertical: 5,
+    fontWeight: "bold",
+    marginBottom: 5,
+  },
+  subjectName: {
+    fontSize: 14,
+    fontWeight: "bold",
+    marginBottom: 5,
+  },
+  teacherName: {
+    fontSize: 14,
+    color: "#666",
+    marginBottom: 5,
+  },
+  periodTime: {
+    fontSize: 12,
+    color: "#999",
   },
 });
 
