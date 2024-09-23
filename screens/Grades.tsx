@@ -1,99 +1,77 @@
 import React, { useEffect, useState } from "react";
-import {
-  View,
-  Text,
-  Button,
-  ActivityIndicator,
-  StyleSheet,
-  ScrollView,
-  ImageBackground,
-} from "react-native";
-import { useDispatch, useSelector } from "react-redux";
-import { Picker } from "@react-native-picker/picker";
+import { View, Text, StyleSheet, FlatList, ImageBackground } from "react-native";
 import { useAppSelector } from "../hooks/reduxHooks";
-import { getKids } from "../Redux/Slices/KidsSlice";
 import { fetchSubjectsGrades } from "../services/gradeServices";
+import Loader from "./components/Loader";
 
-const KidsGrades = () => {
-  const dispatch = useDispatch();
-  const kids = useSelector((state) => state.kids.kidsList);
+const Grades = () => {
   const userInfo = useAppSelector((state) => state.user.user);
-  const [selectedKid, setSelectedKid] = useState("");
   const [grades, setGrades] = useState([]);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    const parentId = userInfo.id;
-    if (parentId) {
-      dispatch(getKids(parentId));
-    }
-  }, []);
-
-  const handleViewGrades = async () => {
-    if (selectedKid) {
-      setLoading(true);
+    const fetchGrades = async () => {
       try {
-        const fetchedGrades = await fetchSubjectsGrades(selectedKid);
-        setGrades(fetchedGrades);
-        setError(null);
+        setLoading(true);
+        const gradesArray = await fetchSubjectsGrades(userInfo.id);
+        setGrades(gradesArray);
       } catch (error) {
-        setError("Failed to fetch grades. Please try again.");
+        setError("Failed to fetch grades.");
       } finally {
         setLoading(false);
       }
+    };
+    fetchGrades();
+  }, [userInfo.id]);
+
+  const calculatePercentage = () => {
+    if (grades.length === 0) {
+      return 0; // إذا لم يكن هناك درجات، النسبة ستكون 0
+    }
+    const totalGrades = grades.reduce((acc, grade) => acc + grade.grade, 0);
+    const maxTotalGrades = grades.length * 100; // أقصى درجات ممكنة
+    return Math.round((totalGrades / maxTotalGrades) * 100); // النسبة المئوية لأقرب عدد صحيح
+  };
+
+  const getEvaluation = (percentage) => {
+    if (percentage >= 85) {
+      return "You are Excellent!";
+    } else if (percentage >= 70) {
+      return "You are Good!";
+    } else {
+      return "Keep Trying!";
     }
   };
 
+  const percentage = calculatePercentage();
+  const evaluation = getEvaluation(percentage);
+
   return (
     <ImageBackground
-      source={require("../assets/images/Pastel Purple fun Creative Modern Minimalist Kids Smile Phone Wallpaper.png")}
+      source={require("../assets/images/Pastel Purple fun Creative Modern Minimalist Kids Smile Phone Wallpaper (2).png")}
       style={styles.background}
     >
       <View style={styles.container}>
-        <Text style={styles.header}>My Kids</Text>
-
-        <View style={styles.form}>
-          <Picker
-            selectedValue={selectedKid}
-            onValueChange={(itemValue) => setSelectedKid(itemValue)}
-            style={styles.picker}
-          >
-            <Picker.Item label="Select a kid" value="" />
-            {kids.map((kid) => (
-              <Picker.Item key={kid.id} label={kid.name} value={kid.id} />
-            ))}
-          </Picker>
-
-          <Button title="VIEW" onPress={handleViewGrades} color="#002749" />
-        </View>
-
-        {loading && <ActivityIndicator size="large" color="#002749" />}
-
-        {error && <Text style={styles.error}>{error}</Text>}
-
-        {grades.length > 0 && (
-          <ScrollView>
-            <View style={styles.gradeContainer}>
-              <View style={styles.tableHeader}>
-                <Text style={styles.tableHeaderText}>Subject</Text>
-                <Text style={styles.tableHeaderText}>Grade</Text>
-              </View>
-
-              {grades.map((item) => (
-                <View key={item.id} style={styles.tableRow}>
-                  <Text style={styles.tableCell}>{item.subjectName}</Text>
-                  <Text style={styles.tableCell}>{item.quizScore}</Text>
-
-                  <Text style={styles.tableCell}>{item.grade}</Text>
+        {loading ? (
+          <Loader /> // عرض Loader أثناء التحميل
+        ) : error ? (
+          <Text style={styles.error}>{error}</Text>
+        ) : (
+          <View style={styles.gradeContainer}>
+            <Text style={styles.evaluation}>{evaluation}</Text>
+            <FlatList
+              data={grades}
+              keyExtractor={(item, index) => index.toString()}
+              renderItem={({ item }) => (
+                <View style={styles.row}>
+                  <Text style={styles.subject}>{item.subjectName}</Text>
+                  <Text style={styles.grade}>{item.grade}</Text>
+                  <Text style={styles.quizScore}>{item.quizScore}</Text>
                 </View>
-              ))}
-            </View>
-          </ScrollView>
-        )}
-
-        {grades.length === 0 && !loading && !error && (
-          <Text>No grades available for the selected kid.</Text>
+              )}
+            />
+          </View>
         )}
       </View>
     </ImageBackground>
@@ -109,21 +87,7 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 20,
     justifyContent: "center",
-  },
-  header: {
-    fontSize: 24,
-    fontWeight: "bold",
-    textAlign: "center",
-    marginBottom: 20,
-    color: "#4A4A4A",
-  },
-  form: {
-    marginBottom: 20,
-  },
-  picker: {
-    height: 50,
-    width: "100%",
-    marginBottom: 20,
+    paddingTop: 200,
   },
   gradeContainer: {
     backgroundColor: "#fff",
@@ -135,28 +99,38 @@ const styles = StyleSheet.create({
     shadowRadius: 5,
     elevation: 5,
   },
-  tableHeader: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    backgroundColor: "#002749",
-    padding: 10,
+  evaluation: {
+    fontSize: 24,
+    fontWeight: "600",
+    textAlign: "center",
+    color: "#4CAF50",
+    marginBottom: 10,
   },
-  tableHeaderText: {
-    color: "#fff",
-    fontWeight: "bold",
-    fontSize: 18,
-  },
-  tableRow: {
+  row: {
     flexDirection: "row",
     justifyContent: "space-between",
     paddingVertical: 12,
     borderBottomWidth: 1,
     borderBottomColor: "#ccc",
   },
-  tableCell: {
+  subject: {
+    fontSize: 18,
+    flex: 2,
+    color: "#333",
+  },
+  grade: {
     fontSize: 18,
     flex: 1,
+    backgroundColor: "#e6efff",
     textAlign: "center",
+    color: "black",
+  },
+  quizScore: {
+    fontSize: 18,
+    flex: 1,
+    backgroundColor: "#f0f9ee",
+    textAlign: "center",
+    color: "black",
   },
   error: {
     color: "red",
@@ -164,4 +138,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default KidsGrades;
+export default Grades;

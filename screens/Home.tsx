@@ -25,6 +25,8 @@ const Home = () => {
     { iconName: "table", text: "Routine Table", screen: "routine" },
     { iconName: "question", text: "Quiz", screen: "quiz" },
     { iconName: "bar-chart", text: "Grades", screen: "grade" },
+    { iconName: "bar-chart", text: "Kids Grade", screen: "KidsGrade" },
+
     { iconName: "user", text: "Staff", screen: "staff" },
     { iconName: "phone", text: "Ask Doubts", screen: "contact" },
     { iconName: "image", text: "School gallary", screen: "gallary" },
@@ -50,7 +52,7 @@ const Home = () => {
   };
   return (
     <ImageBackground
-      source={require("../assets/images/home-bg.jpeg")} // Use require for local images
+      source={require("../assets/images/home2.png")} // Use require for local images
       style={styles.background}
     >
       <Headero/>

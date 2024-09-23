@@ -6,15 +6,17 @@ import {
   FlatList,
   ImageBackground,
   StyleSheet,
-  Image, // Import Image from 'react-native'
+  Image,
 } from "react-native";
 import { useDispatch } from "react-redux";
 import { fetchSubjectsByLevel } from "../services/subjectServices";
 import { useAppSelector } from "../hooks/reduxHooks";
 import { useNavigation } from "@react-navigation/native";
+import Loader from "./components/Loader";
 
 function Subjects() {
   const [filteredSubjects, setFilteredSubjects] = useState([]);
+  const [loading, setLoading] = useState(true); // حالة التحميل
   const dispatch = useDispatch();
   const userInfo = useAppSelector((state) => state.user.user);
   const navigation = useNavigation();
@@ -25,24 +27,23 @@ function Subjects() {
         const data = await fetchSubjectsByLevel(userInfo.class_id);
         setFilteredSubjects(data);
       }
+      setLoading(false); // إنهاء حالة التحميل بعد استرجاع البيانات
     };
 
     loadSubjects();
   }, [userInfo.class_id]);
 
-  // Function to handle navigation to QuizScreen
   const handleButtonClick = (subjectId) => {
     navigation.navigate("QuizScreen", { subjectId });
   };
 
-  // Function to handle navigation to SubjectDetailsScreen
   const showDetails = (subjectId) => {
     navigation.navigate("SubjectDetails", { subjectId });
   };
 
   return (
     <ImageBackground
-      source={require("../assets/images/home-bg.jpeg")}
+      source={require("../assets/images/schaduel.png")}
       style={styles.background}
     >
       <View style={styles.container}>
@@ -50,34 +51,38 @@ function Subjects() {
           <Text style={styles.greetingText}>Hi {userInfo.name}</Text>
         </View>
 
-        <FlatList
-          data={filteredSubjects}
-          keyExtractor={(item) => item.id.toString()}
-          renderItem={({ item }) => (
-            <TouchableOpacity
-              style={styles.card}
-              onPress={() => handleButtonClick(item.id)}
-            >
-              <View style={styles.iconContainer}>
-                <Image
-                  style={styles.stretch}
-                  source={{ uri: item.photoURL }} // Use dynamic image URL
-                />
-                <Text style={styles.subjectName}>{item.name}</Text>
-                <Text style={styles.description}>{item.description}</Text>
+        {loading ? ( // عرض Loader أثناء التحميل
+          <Loader/>
+        ) : (
+          <FlatList
+            data={filteredSubjects}
+            keyExtractor={(item) => item.id.toString()}
+            renderItem={({ item }) => (
+              <TouchableOpacity
+                style={styles.card}
+                onPress={() => handleButtonClick(item.id)}
+              >
+                <View style={styles.iconContainer}>
+                  <Image
+                    style={styles.stretch}
+                    source={{ uri: item.photoURL }} // Use dynamic image URL
+                  />
+                  <Text style={styles.subjectName}>{item.name}</Text>
+                  <Text style={styles.description}>{item.description}</Text>
 
-                <TouchableOpacity
-                  style={styles.materialsButton}
-                  onPress={() => showDetails(item.id)}
-                >
-                  <Text style={styles.materialsButtonText}>See Material</Text>
-                </TouchableOpacity>
-              </View>
-            </TouchableOpacity>
-          )}
-          numColumns={2}
-          contentContainerStyle={styles.cardContainer}
-        />
+                  <TouchableOpacity
+                    style={styles.materialsButton}
+                    onPress={() => showDetails(item.id)}
+                  >
+                    <Text style={styles.materialsButtonText}>See Material</Text>
+                  </TouchableOpacity>
+                </View>
+              </TouchableOpacity>
+            )}
+            numColumns={2}
+            contentContainerStyle={styles.cardContainer}
+          />
+        )}
       </View>
     </ImageBackground>
   );
@@ -99,9 +104,9 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   stretch: {
-    width: 100,  // Adjust width as needed
-    height: 100, // Adjust height as needed
-    resizeMode: 'cover', // Ensures the image covers the area without stretching
+    width: 100,
+    height: 100,
+    resizeMode: 'cover',
   },
   greetingContainer: {
     marginBottom: 20,
@@ -111,7 +116,6 @@ const styles = StyleSheet.create({
   greetingText: {
     fontWeight: "bold",
     fontSize: 20,
-    // marginBottom: 10,
   },
   cardContainer: {
     justifyContent: "center",
@@ -129,8 +133,7 @@ const styles = StyleSheet.create({
   },
   iconContainer: {
     alignItems: "center",
-    // padding: 15,
-    height:200
+    height: 200,
   },
   subjectName: {
     fontWeight: "bold",
@@ -143,8 +146,7 @@ const styles = StyleSheet.create({
     color: "#6b7280",
     fontSize: 14,
     textAlign: "center",
-    // marginBottom: 10,
-    paddingHorizontal:5
+    paddingHorizontal: 5,
   },
   materialsButton: {
     marginTop: 10,
@@ -154,7 +156,7 @@ const styles = StyleSheet.create({
     borderRadius: 25,
     width: '80%',
     alignItems: 'center',
-    marginBottom:50
+    marginBottom: 50,
   },
   materialsButtonText: {
     color: "#fff",

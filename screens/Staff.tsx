@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, Image, ScrollView, StyleSheet, TouchableOpacity } from 'react-native';
 import { fetchTeachers } from '../services/userServices';
+import Loader from './components/Loader';
 
 function Staff() {
   const [teachers, setTeachers] = useState([]);
+  const [loading, setLoading] = useState(true); // إضافة حالة التحميل
 
   useEffect(() => {
     const loadTeachers = async () => {
@@ -12,6 +14,8 @@ function Staff() {
         setTeachers(fetchedTeachers);
       } catch (error) {
         console.error('Error fetching teachers: ', error);
+      } finally {
+        setLoading(false); // تأكد من إيقاف التحميل بعد الانتهاء
       }
     };
 
@@ -25,19 +29,23 @@ function Staff() {
         <Text style={styles.headerText}>Teachers</Text>
       </View>
 
-      {/* Teacher Cards */}
-      {teachers.map((teacher, index) => (
-        <View key={index} style={styles.card}>
-          <Image source={{ uri: teacher.photoURL }} style={styles.profileImage} />
-          <Text style={styles.name}>{teacher.name}</Text>
-          <Text style={styles.subject}>{teacher.subjectName}</Text>
-          <Text style={styles.description}>{teacher.description}</Text>
+      {loading ? ( // عرض Loader أثناء التحميل
+        <Loader />
+      ) : (
+        // Teacher Cards
+        teachers.map((teacher, index) => (
+          <View key={index} style={styles.card}>
+            <Image source={{ uri: teacher.photoURL }} style={styles.profileImage} />
+            <Text style={styles.name}>{teacher.name}</Text>
+            <Text style={styles.subject}>{teacher.subjectName}</Text>
+            <Text style={styles.description}>{teacher.description}</Text>
 
-          <TouchableOpacity style={styles.profileButton}>
-            <Text style={styles.profileButtonText}>View Profile</Text>
-          </TouchableOpacity>
-        </View>
-      ))}
+            <TouchableOpacity style={styles.profileButton}>
+              <Text style={styles.profileButtonText}>View Profile</Text>
+            </TouchableOpacity>
+          </View>
+        ))
+      )}
     </ScrollView>
   );
 }
@@ -83,12 +91,10 @@ const styles = StyleSheet.create({
   name: {
     fontSize: 18,
     fontWeight: 'bold',
-    // marginBottom: 5,
   },
   subject: {
     fontSize: 16,
     color: '#888',
-    // marginBottom: 10,
   },
   description: {
     fontSize: 14,

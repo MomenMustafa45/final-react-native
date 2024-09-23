@@ -1,5 +1,5 @@
-import React from 'react';
-import { View, Text, StyleSheet, Image } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { View, Text, StyleSheet } from 'react-native';
 import MasonryList from 'react-native-masonry-list';
 
 // Import local images
@@ -16,6 +16,7 @@ import img10 from '../assets/images/student/istockphoto-1338735375-612x612.jpg';
 import img11 from '../assets/images/student/istockphoto-1361844238-612x612.jpg';
 import img12 from '../assets/images/student/istockphoto-1482634149-612x612.jpg';
 import img13 from '../assets/images/student/istockphoto-1482634409-612x612.jpg';
+import Loader from './components/Loader';
 
 // مجموعة من الصور المحلية في مصفوفة مع الأبعاد
 const images = [
@@ -32,19 +33,34 @@ const images = [
   { source: img11, width: 612, height: 612 },
   { source: img12, width: 612, height: 612 },
   { source: img13, width: 612, height: 612 },
-  // أضف المزيد من الصور هنا
 ];
 
 const SchoolGallary = () => {
+  const [loading, setLoading] = useState(true); // حالة التحميل
+
+  useEffect(() => {
+    // محاكاة تحميل البيانات
+    const loadImages = async () => {
+      // يمكنك تنفيذ عمليات تحميل حقيقية هنا
+      setLoading(false); // عند الانتهاء من تحميل الصور
+    };
+
+    loadImages();
+  }, []);
+
   return (
     <View style={styles.container}>
       <Text style={styles.title}>School Gallery</Text>
-      <MasonryList
-        images={images}
-        imageContainerStyle={styles.imageContainer}
-        columns={2} // عدد الأعمدة
-        spacing={10} // المسافة بين الصور
-      />
+      {loading ? (
+        <Loader/> // عرض اللودر أثناء التحميل
+      ) : (
+        <MasonryList
+          images={images}
+          imageContainerStyle={styles.imageContainer}
+          columns={2} // عدد الأعمدة
+          spacing={10} // المسافة بين الصور
+        />
+      )}
     </View>
   );
 };
@@ -62,7 +78,7 @@ const styles = StyleSheet.create({
   },
   imageContainer: {
     borderRadius: 10,
-    overflow: 'hidden',
+    // overflow: 'hidden',
   },
 });
 

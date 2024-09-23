@@ -91,7 +91,7 @@ const Login = () => {
             showsVerticalScrollIndicator={false}
           >
             <View className="pt-20">
-              <Image source={require("../assets/images/login-img.png")} />
+              <Image source={require("../assets/images/Pastel Purple fun Creative Modern Minimalist Kids Smile Phone Wallpaper.png")} />
             </View>
 
             <View className="my-8 px-5">
