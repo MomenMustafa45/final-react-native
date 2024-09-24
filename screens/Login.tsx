@@ -76,7 +76,7 @@ const Login = () => {
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <View style={{ flex: 1 }}>
           <LinearGradient
-            colors={["#2855AE", "#7292CF"]}
+            colors={["#1e3a8a", "#1e3a8a"]}
             style={{
               position: "absolute",
               left: 0,
@@ -91,7 +91,7 @@ const Login = () => {
             showsVerticalScrollIndicator={false}
           >
             <View className="pt-20">
-              <Image source={require("../assets/images/Pastel Purple fun Creative Modern Minimalist Kids Smile Phone Wallpaper.png")} />
+              <Image source={require("../assets/images/login-img.png")} />
             </View>
 
             <View className="my-8 px-5">
@@ -115,16 +115,11 @@ const Login = () => {
                   }}
                   render={({ field: { onChange, onBlur, value } }) => (
                     <RadioButton.Group onValueChange={onChange} value={value}>
-                      <View className="flex flex-row justify-between">
+                      <View className="flex flex-row justify-arround">
                         <View
                           style={{ flexDirection: "row", alignItems: "center" }}
                         >
-                          <RadioButton value="teachers" color="blue" />
-                          <Text>Teacher</Text>
-                        </View>
-                        <View
-                          style={{ flexDirection: "row", alignItems: "center" }}
-                        >
+                         
                           <RadioButton value="students" color="red" />
                           <Text>Student</Text>
                         </View>

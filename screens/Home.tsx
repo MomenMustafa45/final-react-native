@@ -1,5 +1,5 @@
 import { View, Text, StyleSheet, ImageBackground } from "react-native";
-import React, { useEffect } from "react";
+import React from "react";
 import { Avatar, ButtonGroup } from "@rneui/themed";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { TouchableOpacity } from "react-native-gesture-handler";
@@ -12,53 +12,57 @@ import { resetUser } from "../Redux/Slices/userSlice";
 import { signOut } from "firebase/auth";
 import auth from "../config/firebase";
 import { useAppDispatch, useAppSelector } from "../hooks/reduxHooks";
-import { Header } from "@react-navigation/stack";
 import Headero from "./components/Header";
 
 const Home = () => {
   const userInfo = useAppSelector((state) => state.user.user);
-
   const navigation = useNavigation<RootNavigationParamList>();
 
   const arr = [
     { iconName: "book", text: "Subjects", screen: "Subjects" },
     { iconName: "table", text: "Routine Table", screen: "routine" },
+    { iconName: "table", text: "Kids Routine Table", screen: "kidsRoutine" },
     { iconName: "question", text: "Quiz", screen: "quiz" },
     { iconName: "bar-chart", text: "Grades", screen: "grade" },
     { iconName: "bar-chart", text: "Kids Grade", screen: "KidsGrade" },
-
     { iconName: "user", text: "Staff", screen: "staff" },
     { iconName: "phone", text: "Ask Doubts", screen: "contact" },
-    { iconName: "image", text: "School gallary", screen: "gallary" },
-    // { iconName: "sign-out", text: "Log out " ,screen :"Login" },
-    
+    { iconName: "image", text: "School Gallery", screen: "gallary" },
   ];
+
+  const filteredArr = arr.filter((item) => {
+    if (userInfo.role === "parent") {
+      return !["routine",  "grade",  "quiz","Subjects"].includes(item.screen);
+    }
+    if (userInfo.role === "student") {
+      return !["kidsRoutine", "KidsGrade"].includes(item.screen);
+    }
+    return true; // Show all for other roles
+  });
+
   const dispatch = useAppDispatch();
-  const navigate = useNavigation();
   const handleLogout = async () => {
     try {
-      console.log("logout fun");
       await AsyncStorage.removeItem("userId");
       dispatch(resetUser());
-
-      // Sign out from Firebase
       await signOut(auth);
-      navigate.dispatch(
+      navigation.dispatch(
         CommonActions.reset({ index: 0, routes: [{ name: "Login" }] })
       );
     } catch (error) {
       console.error("Error logging out: ", error);
     }
   };
+
   return (
     <ImageBackground
-      source={require("../assets/images/home2.png")} // Use require for local images
+      source={require("../assets/images/home2.png")}
       style={styles.background}
     >
-      <Headero/>
+      <Headero />
       <View style={styles.container}>
         <View style={styles.cardContainer}>
-          {arr.map((item, index) => (
+          {filteredArr.map((item, index) => (
             <TouchableOpacity
               key={index}
               style={styles.card}
@@ -94,18 +98,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     padding: 20,
   },
-  greetingContainer: {
-    marginBottom: 20,
-    flexDirection: "row",
-    gap: 20,
-    marginRight: 200,
-  },
-  greetingText: {
-    fontWeight: "bold",
-    fontSize: 20,
-    marginBottom: 10,
-    marginLeft: 60,
-  },
   cardContainer: {
     flexDirection: "row",
     flexWrap: "wrap",
@@ -127,11 +119,11 @@ const styles = StyleSheet.create({
   icon: {
     paddingTop: 10,
     paddingBottom: 10,
-    color: "#345fb4",
+    color: "#1e3a8a",
   },
   cardText: {
     fontWeight: "bold",
-    color: "black",
+    color: "#ea580c",
   },
 });
 

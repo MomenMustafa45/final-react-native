@@ -22,7 +22,7 @@ const renderTabBar = (props) => (
     indicatorStyle={{ backgroundColor: "#fff", borderRadius: 10 }}
     style={{ backgroundColor: "#fff", borderRadius: 10, marginHorizontal: 15 }}
     labelStyle={{ color: "#000", borderRadius: 10 }}
-    activeColor="#1e40af"
+    activeColor="#ea580c"
     inactiveColor="#000"
   />
 );
@@ -168,7 +168,7 @@ const styles = StyleSheet.create({
   },
   periodTime: {
     fontSize: 12,
-    color: "#999",
+    color: "#ea580c",
   },
 });
 

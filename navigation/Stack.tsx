@@ -8,11 +8,13 @@ import Quiz from "../screens/Quiz";
 import Staff from "../screens/Staff";
 import Contact from "../screens/Contact";
 import Grades from "../screens/Grades";
-import RoutineTable from "../screens/RoutineTable";
+// import RoutineTable from "../screens/RoutineTable";
 import StudentRoutineTable from "../screens/StudentRoutineTable";
 import SchoolGallary from "../screens/SchoolGallary";
 import SubjectDetails from "../screens/SubjectMaterial";
 import KidsGrades from "../screens/KidsGrades";
+import ParentRoutineTable from "../screens/Quiz";
+import KidsRoutine from "../screens/KidsRoutineTable";
 
 export type RootNavigationParamList = {
   navigate(arg0: string): unknown;
@@ -32,6 +34,7 @@ export type RootNavigationParamList = {
   gallary: undefined;
   SubjectDetails: undefined;
   KidsGrade:undefined;
+  kidsRoutine :undefined;
 };
 
 const Stack = createStackNavigator<RootNavigationParamList>();
@@ -53,6 +56,7 @@ const StackNavigation = () => {
       <Stack.Screen name="gallary" component={SchoolGallary} />
       <Stack.Screen name="SubjectDetails" component={SubjectDetails} />
       <Stack.Screen name="KidsGrade" component={KidsGrades} />
+      <Stack.Screen name="kidsRoutine" component={KidsRoutine} />
 
       <Stack.Screen name="routine" component={StudentRoutineTable} />
 

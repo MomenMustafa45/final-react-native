@@ -98,6 +98,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.3,
     shadowRadius: 5,
     elevation: 5,
+    marginTop:100
   },
   evaluation: {
     fontSize: 24,

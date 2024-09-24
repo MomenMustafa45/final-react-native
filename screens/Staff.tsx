@@ -40,9 +40,9 @@ function Staff() {
             <Text style={styles.subject}>{teacher.subjectName}</Text>
             <Text style={styles.description}>{teacher.description}</Text>
 
-            <TouchableOpacity style={styles.profileButton}>
+            {/* <TouchableOpacity style={styles.profileButton}>
               <Text style={styles.profileButtonText}>View Profile</Text>
-            </TouchableOpacity>
+            </TouchableOpacity> */}
           </View>
         ))
       )}
