@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, Image, ScrollView, StyleSheet, TouchableOpacity } from 'react-native';
 import { fetchTeachers } from '../services/userServices';
 import Loader from './components/Loader';
+import Headero from './components/Header';
 
 function Staff() {
   const [teachers, setTeachers] = useState([]);
@@ -24,6 +25,8 @@ function Staff() {
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
+    <Headero/>
+
       {/* Header */}
       <View style={styles.header}>
         <Text style={styles.headerText}>Teachers</Text>

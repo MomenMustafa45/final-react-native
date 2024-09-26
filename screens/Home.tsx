@@ -13,6 +13,8 @@ import { signOut } from "firebase/auth";
 import auth from "../config/firebase";
 import { useAppDispatch, useAppSelector } from "../hooks/reduxHooks";
 import Headero from "./components/Header";
+// import Icon from "react-native-vector-icons/Ionicons"; // مثال لاستيراد مكتبة Ionicons
+
 
 const Home = () => {
   const userInfo = useAppSelector((state) => state.user.user);
@@ -21,6 +23,8 @@ const Home = () => {
   const arr = [
     { iconName: "book", text: "Subjects", screen: "Subjects" },
     { iconName: "table", text: "Routine Table", screen: "routine" },
+    { iconName: "table", text: "Routine Table", screen: "TeacherTable" },
+
     { iconName: "table", text: "Kids Routine Table", screen: "kidsRoutine" },
     { iconName: "question", text: "Quiz", screen: "quiz" },
     { iconName: "bar-chart", text: "Grades", screen: "grade" },
@@ -28,6 +32,10 @@ const Home = () => {
     { iconName: "user", text: "Staff", screen: "staff" },
     { iconName: "phone", text: "Ask Doubts", screen: "contact" },
     { iconName: "image", text: "School Gallery", screen: "gallary" },
+    { iconName: "comments", text: "Class Chat", screen: "chat" },
+    
+
+
   ];
 
   const filteredArr = arr.filter((item) => {

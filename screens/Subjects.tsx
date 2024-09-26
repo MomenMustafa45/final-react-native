@@ -13,6 +13,7 @@ import { fetchSubjectsByLevel } from "../services/subjectServices";
 import { useAppSelector } from "../hooks/reduxHooks";
 import { useNavigation } from "@react-navigation/native";
 import Loader from "./components/Loader";
+import Headero from "./components/Header";
 
 function Subjects() {
   const [filteredSubjects, setFilteredSubjects] = useState([]);
@@ -46,9 +47,12 @@ function Subjects() {
       source={require("../assets/images/schaduel.png")}
       style={styles.background}
     >
+    <Headero/>
+
       <View style={styles.container}>
         <View style={styles.greetingContainer}>
-          <Text style={styles.greetingText}>Hi {userInfo.name}</Text>
+          {/* <Text style={styles.greetingText}>Hi {userInfo.name}</Text> */}
+
         </View>
 
         {loading ? ( // عرض Loader أثناء التحميل
@@ -102,6 +106,8 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     padding: 20,
+    marginTop:100
+
   },
   stretch: {
     width: 100,
@@ -119,6 +125,7 @@ const styles = StyleSheet.create({
   },
   cardContainer: {
     justifyContent: "center",
+    
   },
   card: {
     backgroundColor: "#f5f6fc",

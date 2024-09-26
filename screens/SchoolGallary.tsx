@@ -17,6 +17,7 @@ import img11 from '../assets/images/student/istockphoto-1361844238-612x612.jpg';
 import img12 from '../assets/images/student/istockphoto-1482634149-612x612.jpg';
 import img13 from '../assets/images/student/istockphoto-1482634409-612x612.jpg';
 import Loader from './components/Loader';
+import Headero from './components/Header';
 
 // مجموعة من الصور المحلية في مصفوفة مع الأبعاد
 const images = [
@@ -50,7 +51,9 @@ const SchoolGallary = () => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>School Gallery</Text>
+    <Headero/>
+
+      {/* <Text style={styles.title}>School Gallery</Text> */}
       {loading ? (
         <Loader/> // عرض اللودر أثناء التحميل
       ) : (

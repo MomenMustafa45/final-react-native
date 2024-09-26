@@ -53,6 +53,7 @@ const Grades = () => {
       style={styles.background}
     >
       <View style={styles.container}>
+        
         {loading ? (
           <Loader /> // عرض Loader أثناء التحميل
         ) : error ? (
