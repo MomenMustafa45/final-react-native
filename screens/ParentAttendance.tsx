@@ -384,7 +384,8 @@ const styles = StyleSheet.create({
   },
   tableHeader: {
     flexDirection: "row",
-    justifyContent: "space-between",
+    justifyContent: "center",
+    gap:120,
     backgroundColor: "#002749",
     padding: 10,
   },
@@ -416,7 +417,6 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   iconContainer: {
-    display:'flex',
     justifyContent: 'center', // Centers vertically
     alignItems: 'center',     // Centers horizontally
     height: '100%',           // Ensures it takes up the full cell height
