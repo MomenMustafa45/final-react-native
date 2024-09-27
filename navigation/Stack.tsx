@@ -19,6 +19,7 @@ import Chat from "../screens/Chatt";
 import TeacherTable from "../screens/TeacherTable";
 import Attendance from "../screens/Attendance";
 import MyCalendar from "../screens/Calendar";
+import ParentAttendance from "../screens/ParentAttendance";
 
 export type RootNavigationParamList = {
   navigate(arg0: string): unknown;
@@ -41,6 +42,9 @@ export type RootNavigationParamList = {
   kidsRoutine :undefined;
   chat:undefined;
   TeacherTable:undefined;
+  attendance:undefined;
+  parentAttendance:undefined;
+  calendar:undefined;
 };
 
 const Stack = createStackNavigator<RootNavigationParamList>();
@@ -68,6 +72,7 @@ const StackNavigation = () => {
       <Stack.Screen name="kidsRoutine" component={KidsRoutine} />
       <Stack.Screen name="attendance" component={Attendance} />
       <Stack.Screen name="calendar" component={MyCalendar} />
+      <Stack.Screen name="parentAttendance" component={ParentAttendance} />
 
       <Stack.Screen name="routine" component={StudentRoutineTable} />
 

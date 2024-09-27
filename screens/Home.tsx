@@ -13,6 +13,7 @@ import { signOut } from "firebase/auth";
 import auth from "../config/firebase";
 import { useAppDispatch, useAppSelector } from "../hooks/reduxHooks";
 import Headero from "./components/Header";
+
 // import Icon from "react-native-vector-icons/Ionicons"; // مثال لاستيراد مكتبة Ionicons
 
 
@@ -34,25 +35,26 @@ const Home = () => {
     { iconName: "image", text: "School Gallery", screen: "gallary" },
     { iconName: "comments", text: "Class Chat", screen: "chat" },
     
-
+    // { iconName: "image", text: "School gallary", screen: "gallary" },
+    { iconName: "qrcode", text: "Attendance", screen: "attendance" },
+    { iconName: "check", text: "Kids Attendance", screen: "parentAttendance" },
+    { iconName: "calendar", text: "Calendar", screen: "calendar" },
 
   ];
 
   const filteredArr = arr.filter((item) => {
     if (userInfo.role === "parent") {
-      return !["routine",  "grade",  "quiz","Subjects"].includes(item.screen);
+      return !["routine",  "grade",  "quiz","Subjects","attendance",'TeacherTable'].includes(item.screen);
     }
     if (userInfo.role === "student") {
-      return !["kidsRoutine", "KidsGrade"].includes(item.screen);
+      return !["kidsRoutine", "KidsGrade" , 'TeacherTable'].includes(item.screen);
     }
     return true; // Show all for other roles
   });
 
-    { iconName: "image", text: "School gallary", screen: "gallary" },
-    { iconName: "qrcode", text: "Attendance", screen: "attendance" },
-    { iconName: "calendar", text: "Calendar", screen: "calendar" },
+   
     // { iconName: "sign-out", text: "Log out " ,screen :"Login" },
-  ];
+  
   const dispatch = useAppDispatch();
   const handleLogout = async () => {
     try {
