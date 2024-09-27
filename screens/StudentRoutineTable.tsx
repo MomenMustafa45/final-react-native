@@ -4,7 +4,6 @@ import {
   Text,
   StyleSheet,
   ImageBackground,
-  ActivityIndicator,
   ScrollView,
 } from "react-native";
 import { TabView, SceneMap, TabBar } from "react-native-tab-view";
@@ -12,17 +11,18 @@ import { fetchSchedule } from "../services/scheduleServices";
 import { getLevelNameById } from "../services/levelsServices";
 import { getSubjectNameById } from "../services/subjectServices";
 import { getTeacherNameById } from "../services/teacherServices";
-import { useAppSelector } from "../hooks/reduxHooks"; // Adjust path as needed
+import { useAppSelector } from "../hooks/reduxHooks"; 
 import { Schedule } from "../utils/types";
 import Headero from "./components/Header";
+import Loader from "./components/Loader";
 
 const renderTabBar = (props) => (
   <TabBar
     {...props}
-    indicatorStyle={{ backgroundColor: "#fff" ,borderRadius:10}}
-    style={{ backgroundColor: "#fff" ,borderRadius:10,marginHorizontal:15}}
-    labelStyle={{ color: "#000",borderRadius:10 }}
-    activeColor="#1e40af"
+    indicatorStyle={{ backgroundColor: "#fff", borderRadius: 10 }}
+    style={{ backgroundColor: "#fff", borderRadius: 10, marginHorizontal: 15 }}
+    labelStyle={{ color: "#000", borderRadius: 10 }}
+    activeColor="#ea580c"
     inactiveColor="#000"
   />
 );
@@ -30,7 +30,7 @@ const renderTabBar = (props) => (
 const StudentRoutineTable = () => {
   const [index, setIndex] = useState(0);
   const [routes] = useState([
-    { key: "sunday", title: "sun" },
+    { key: "sunday", title: "Sun" },
     { key: "monday", title: "Mon" },
     { key: "tuesday", title: "Tues" },
     { key: "wednesday", title: "Wed" },
@@ -52,13 +52,8 @@ const StudentRoutineTable = () => {
           const updatedSubjects = await Promise.all(
             day.subjects.map(
               async (subject: { subject_id: string; teacher_id: string }) => {
-                const subjectName = await getSubjectNameById(
-                  subject.subject_id
-                );
-                const teacherName = await getTeacherNameById(
-                  subject.teacher_id
-                );
-
+                const subjectName = await getSubjectNameById(subject.subject_id);
+                const teacherName = await getTeacherNameById(subject.teacher_id);
                 return {
                   ...subject,
                   subject_name: subjectName,
@@ -74,10 +69,7 @@ const StudentRoutineTable = () => {
         })
       );
 
-      setScheduleTable({
-        ...schedule,
-        days: updatedDays,
-      });
+      setScheduleTable({ ...schedule, days: updatedDays });
     } catch (error) {
       console.log(error);
     }
@@ -85,32 +77,26 @@ const StudentRoutineTable = () => {
 
   useEffect(() => {
     getSchedule();
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   if (!scheduleTable) {
-    return (
-      <View style={styles.loadingContainer}>
-        <ActivityIndicator size="large" color="#4c73be" />
-      </View>
-    );
+    return <Loader />; // Use the Loader component while fetching data
   }
 
   const renderScene = SceneMap({
-    sunday: () => <DaySchedule day={scheduleTable["days"][0]} />, // Adjust index for correct day
-    monday: () => <DaySchedule day={scheduleTable["days"][1]} />, // Adjust index for correct day
-    tuesday: () => <DaySchedule day={scheduleTable["days"][2]} />,
-    wednesday: () => <DaySchedule day={scheduleTable["days"][3]} />,
-    thursday: () => <DaySchedule day={scheduleTable["days"][4]} />,
+    sunday: () => <DaySchedule day={scheduleTable.days[0]} />,
+    monday: () => <DaySchedule day={scheduleTable.days[1]} />,
+    tuesday: () => <DaySchedule day={scheduleTable.days[2]} />,
+    wednesday: () => <DaySchedule day={scheduleTable.days[3]} />,
+    thursday: () => <DaySchedule day={scheduleTable.days[4]} />,
   });
 
   return (
     <ImageBackground
-      source={require("../assets/images/home-bg.jpeg")}
+      source={require("../assets/images/home2.png")}
       style={styles.background}
     >
-      <Headero></Headero>
+      <Headero />
       <TabView
         navigationState={{ index, routes }}
         renderScene={renderScene}
@@ -123,7 +109,6 @@ const StudentRoutineTable = () => {
 
 const DaySchedule = ({ day }) => (
   <ScrollView>
-    {/* <Text style={styles.title}>{day.dayName}</Text> */}
     <View style={styles.tableContainer}>
       {day.subjects.map((subj, index) => {
         const periodTime = index === 0
@@ -150,18 +135,6 @@ const DaySchedule = ({ day }) => (
 const styles = StyleSheet.create({
   background: {
     flex: 1,
-  },
-  loadingContainer: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "#fff",
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: "bold",
-    marginVertical: 10,
-    padding: 30,
   },
   tableContainer: {
     width: "100%",
@@ -195,7 +168,7 @@ const styles = StyleSheet.create({
   },
   periodTime: {
     fontSize: 12,
-    color: "#999",
+    color: "#ea580c",
   },
 });
 

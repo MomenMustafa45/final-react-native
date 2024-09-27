@@ -76,7 +76,7 @@ const Login = () => {
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <View style={{ flex: 1 }}>
           <LinearGradient
-            colors={["#2855AE", "#7292CF"]}
+            colors={["#1e3a8a", "#1e3a8a"]}
             style={{
               position: "absolute",
               left: 0,
@@ -109,36 +109,29 @@ const Login = () => {
                 {/* Create a RadioButton.Group */}
 
                 <Controller
-                  control={control}
-                  rules={{
-                    required: true,
-                  }}
-                  render={({ field: { onChange, onBlur, value } }) => (
-                    <RadioButton.Group onValueChange={onChange} value={value}>
-                      <View className="flex flex-row justify-between">
-                        <View
-                          style={{ flexDirection: "row", alignItems: "center" }}
-                        >
-                          <RadioButton value="teachers" color="blue" />
-                          <Text>Teacher</Text>
-                        </View>
-                        <View
-                          style={{ flexDirection: "row", alignItems: "center" }}
-                        >
-                          <RadioButton value="students" color="red" />
-                          <Text>Student</Text>
-                        </View>
-                        <View
-                          style={{ flexDirection: "row", alignItems: "center" }}
-                        >
-                          <RadioButton value="parents" color="green" />
-                          <Text>Parent</Text>
-                        </View>
-                      </View>
-                    </RadioButton.Group>
-                  )}
-                  name="role"
-                />
+  control={control}
+  rules={{ required: true }}
+  render={({ field: { onChange, onBlur, value } }) => (
+    <RadioButton.Group onValueChange={onChange} value={value}>
+      <View className="flex flex-row justify-around">
+        <View style={{ flexDirection: "row", alignItems: "center" }}>
+          <RadioButton value="students" color="red" />
+          <Text>Student</Text>
+        </View>
+        <View style={{ flexDirection: "row", alignItems: "center" }}>
+          <RadioButton value="parents" color="green" />
+          <Text>Parent</Text>
+        </View>
+        <View style={{ flexDirection: "row", alignItems: "center" }}>
+          <RadioButton value="teachers" color="blue" />
+          <Text>Teacher</Text>
+        </View>
+      </View>
+    </RadioButton.Group>
+  )}
+  name="role"
+/>
+
               </View>
               {/* radio buttons */}
               {/* Email Input */}

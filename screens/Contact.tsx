@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
 import { addContact } from '../services/contactServices';
+import Headero from './components/Header';
 
 const Contact = () => {
   const [data, setData] = useState({
@@ -27,8 +28,12 @@ const Contact = () => {
   };
 
   return (
+    <>
     <View style={styles.container}>
+    <Headero/>
+
       <View style={styles.contactCard}>
+
         <View style={styles.helloContainer}>
           <Text style={styles.title}>SAY HELLO!</Text>
           <Text style={styles.subTitle}>We would love to hear from you!</Text>
@@ -88,6 +93,7 @@ const Contact = () => {
         </View>
       </View>
     </View>
+    </>
   );
 };
 const styles = StyleSheet.create({

@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { View, Text, StyleSheet, FlatList, ImageBackground } from "react-native";
 import { useAppSelector } from "../hooks/reduxHooks";
-
 import { fetchSubjectsGrades } from "../services/gradeServices";
+import Loader from "./components/Loader";
 
 const Grades = () => {
   const userInfo = useAppSelector((state) => state.user.user);
@@ -33,7 +33,6 @@ const Grades = () => {
     const maxTotalGrades = grades.length * 100; // أقصى درجات ممكنة
     return Math.round((totalGrades / maxTotalGrades) * 100); // النسبة المئوية لأقرب عدد صحيح
   };
-  
 
   const getEvaluation = (percentage) => {
     if (percentage >= 85) {
@@ -50,19 +49,18 @@ const Grades = () => {
 
   return (
     <ImageBackground
-      source={require("../assets/images/Pastel Purple fun Creative Modern Minimalist Kids Smile Phone Wallpaper.png")}
+      source={require("../assets/images/Pastel Purple fun Creative Modern Minimalist Kids Smile Phone Wallpaper (2).png")}
       style={styles.background}
     >
       <View style={styles.container}>
-        {/* <Text style={styles.title}>My Grades</Text> */}
+        
         {loading ? (
-          <Text>Loading...</Text>
+          <Loader /> // عرض Loader أثناء التحميل
         ) : error ? (
           <Text style={styles.error}>{error}</Text>
         ) : (
           <View style={styles.gradeContainer}>
             <Text style={styles.evaluation}>{evaluation}</Text>
-            {/* <Text style={styles.percentage}>{percentage}% </Text> */}
             <FlatList
               data={grades}
               keyExtractor={(item, index) => index.toString()}
@@ -90,14 +88,7 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 20,
     justifyContent: "center",
-    paddingTop:200
-  },
-  title: {
-    fontSize: 30,
-    fontWeight: "bold",
-    textAlign: "center",
-    color: "#4A4A4A",
-    marginBottom: 20,
+    paddingTop: 200,
   },
   gradeContainer: {
     backgroundColor: "#fff",
@@ -108,21 +99,14 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.3,
     shadowRadius: 5,
     elevation: 5,
-  
+    marginTop:100
   },
   evaluation: {
     fontSize: 24,
     fontWeight: "600",
     textAlign: "center",
-    color: "#4CAF50", // لون مميز
+    color: "#4CAF50",
     marginBottom: 10,
-  },
-  percentage: {
-    fontSize: 26,
-    fontWeight: "bold",
-    textAlign: "center",
-    color: "#2196F3", // لون مميز
-    marginBottom: 20,
   },
   row: {
     flexDirection: "row",
@@ -139,18 +123,16 @@ const styles = StyleSheet.create({
   grade: {
     fontSize: 18,
     flex: 1,
-    backgroundColor:"#e6efff",
+    backgroundColor: "#e6efff",
     textAlign: "center",
-    color: "black", // لون مميز لنتيجة الاختبار
-    // لون مميز للدرجة
+    color: "black",
   },
   quizScore: {
     fontSize: 18,
     flex: 1,
-    backgroundColor:"#f0f9ee",
-
+    backgroundColor: "#f0f9ee",
     textAlign: "center",
-    color: "black", // لون مميز لنتيجة الاختبار
+    color: "black",
   },
   error: {
     color: "red",
