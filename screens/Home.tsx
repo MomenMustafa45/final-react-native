@@ -47,7 +47,7 @@ const Home = () => {
       return !["routine",  "grade",  "quiz","Subjects","attendance",'TeacherTable'].includes(item.screen);
     }
     if (userInfo.role === "student") {
-      return !["kidsRoutine", "KidsGrade" , 'TeacherTable'].includes(item.screen);
+      return !["kidsRoutine", "KidsGrade" , 'TeacherTable' , "parentAttendance"].includes(item.screen);
     }
     return true; // Show all for other roles
   });

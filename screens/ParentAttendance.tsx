@@ -217,6 +217,7 @@ import {
   ImageBackground,
   FlatList,
 } from "react-native";
+import { MaterialIcons } from '@expo/vector-icons';
 import { useDispatch, useSelector } from "react-redux";
 import { Picker } from "@react-native-picker/picker";
 import { useAppSelector } from "../hooks/reduxHooks";
@@ -286,11 +287,22 @@ const ParentAttendance = () => {
     <View style={styles.tableRow}>
       <Text style={styles.tableCell}>{date}</Text>
       <Text style={styles.tableCell}>
-        {getAttendanceStatus(date) === "present" ? (
+        {/* {getAttendanceStatus(date) === "present" ? (
           <Text style={styles.presentText}>Present</Text>
         ) : (
           <Text style={styles.absentText}>Absent</Text>
-        )}
+        )} */}
+
+{/* <td className="border px-4 py-2 justify-center items-center"> */}
+  <View style={styles.iconContainer}>
+    {getAttendanceStatus(date) === "present" ? (
+      <MaterialIcons name="check-circle" size={24} color="green" />
+    ) : (
+      <MaterialIcons name="cancel" size={24} color="red" />
+    )}
+  </View>
+{/* </td> */}
+
       </Text>
     </View>
   );
@@ -325,7 +337,7 @@ const ParentAttendance = () => {
           <View style={styles.table}>
             <View style={styles.tableHeader}>
               <Text style={styles.tableHeaderText}>Date</Text>
-              <Text style={styles.tableHeaderText}>Attendance Status</Text>
+              <Text style={styles.tableHeaderText}>Attendance</Text>
             </View>
 
             <FlatList
@@ -402,5 +414,11 @@ const styles = StyleSheet.create({
   error: {
     color: "red",
     textAlign: "center",
+  },
+  iconContainer: {
+    display:'flex',
+    justifyContent: 'center', // Centers vertically
+    alignItems: 'center',     // Centers horizontally
+    height: '100%',           // Ensures it takes up the full cell height
   },
 });
