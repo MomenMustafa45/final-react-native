@@ -28,6 +28,8 @@ const Home = () => {
     { iconName: "user", text: "Staff", screen: "staff" },
     { iconName: "phone", text: "Ask Doubts", screen: "contact" },
     { iconName: "image", text: "School gallary", screen: "gallary" },
+    { iconName: "qrcode", text: "Attendance", screen: "attendance" },
+    { iconName: "calendar", text: "Calendar", screen: "calendar" },
     // { iconName: "sign-out", text: "Log out " ,screen :"Login" },
   ];
   const dispatch = useAppDispatch();
