@@ -22,8 +22,10 @@ import MyCalendar from "../screens/Calendar";
 import ParentAttendance from "../screens/ParentAttendance";
 import QuizList from "../screens/QuizList";
 import QuranScreen from "../screens/QuranScreen";
+import { Action } from "@react-navigation/routers/lib/typescript/src/CommonActions";
 
 export type RootNavigationParamList = {
+  dispatch(arg0: Action): unknown;
   navigate(arg0: string): unknown;
   Splash: undefined;
   Home: undefined;
@@ -40,13 +42,13 @@ export type RootNavigationParamList = {
   routine: undefined;
   gallary: undefined;
   SubjectDetails: undefined;
-  KidsGrade:undefined;
-  kidsRoutine :undefined;
-  chat:undefined;
-  TeacherTable:undefined;
-  attendance:undefined;
-  parentAttendance:undefined;
-  calendar:undefined;
+  KidsGrade: undefined;
+  kidsRoutine: undefined;
+  chat: undefined;
+  TeacherTable: undefined;
+  attendance: undefined;
+  parentAttendance: undefined;
+  calendar: undefined;
 };
 
 const Stack = createStackNavigator<RootNavigationParamList>();

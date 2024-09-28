@@ -1,5 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, StyleSheet, FlatList, ImageBackground } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  FlatList,
+  ImageBackground,
+} from "react-native";
 import { useAppSelector } from "../hooks/reduxHooks";
 import { fetchSubjectsGrades } from "../services/gradeServices";
 import Loader from "./components/Loader";
@@ -15,6 +21,7 @@ const Grades = () => {
       try {
         setLoading(true);
         const gradesArray = await fetchSubjectsGrades(userInfo.id);
+
         setGrades(gradesArray);
       } catch (error) {
         setError("Failed to fetch grades.");
@@ -24,6 +31,8 @@ const Grades = () => {
     };
     fetchGrades();
   }, [userInfo.id]);
+
+  console.log(grades);
 
   const calculatePercentage = () => {
     if (grades.length === 0) {
@@ -53,7 +62,6 @@ const Grades = () => {
       style={styles.background}
     >
       <View style={styles.container}>
-        
         {loading ? (
           <Loader /> // عرض Loader أثناء التحميل
         ) : error ? (
@@ -99,7 +107,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.3,
     shadowRadius: 5,
     elevation: 5,
-    marginTop:100
+    marginTop: 100,
   },
   evaluation: {
     fontSize: 24,

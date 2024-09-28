@@ -48,30 +48,33 @@ export const setUrisWithChunks = async ({
   return { chunksUris, chunksVerses };
 };
 
-// fetch first time uris and images
 export const fetchAndDownloadImages = async ({
-  setIsLoading,
+  setIsLoadingImages,
   setLocalImageUris,
   setVerses,
-  setProgress,
+  setProgressImages,
   TOTAL_PAGES,
 }: {
   TOTAL_PAGES: number;
-  setIsLoading: (isLoaded: boolean) => void;
-  setProgress: (currentNum: number) => void;
+  setIsLoadingImages: (isLoaded: boolean) => void;
+  setProgressImages: (currentNum: number) => void;
   setLocalImageUris: (arr: any[]) => void;
   setVerses: (arr: any[]) => void;
 }) => {
-  setIsLoading(true);
+  setIsLoadingImages(true);
 
   try {
+    // Load the last downloaded page number from AsyncStorage
+
+    const lastDownloadedPage = await AsyncStorage.getItem("lastDownloadedPage");
+    const startPage = lastDownloadedPage ? parseInt(lastDownloadedPage) + 1 : 1;
     let downloadedPages = [];
     let imageUris: string[] = [];
     let versesData: any[] = [];
     let currentProgress = 0;
 
-    // Loop over all page numbers
-    for (let pageNumber = 1; pageNumber <= TOTAL_PAGES; pageNumber++) {
+    // Loop over all page numbers starting from the last downloaded page
+    for (let pageNumber = startPage; pageNumber <= TOTAL_PAGES; pageNumber++) {
       const apiUrl = `https://quran.moaddi.org/hafs/all_apis/img_coords?page_number=${pageNumber}`;
 
       // Fetch data from API
@@ -98,9 +101,12 @@ export const fetchAndDownloadImages = async ({
         // Keep track of downloaded pages
         downloadedPages.push(pageNumber);
 
+        // Update last downloaded page in AsyncStorage
+        await AsyncStorage.setItem("lastDownloadedPage", String(pageNumber));
+
         // Update progress (percentage)
         currentProgress = pageNumber / TOTAL_PAGES;
-        setProgress(currentProgress);
+        setProgressImages(currentProgress);
       }
     }
 
@@ -117,70 +123,50 @@ export const fetchAndDownloadImages = async ({
     // Update the state with image URIs and verses
     setLocalImageUris([...chunksUris.reverse()]);
     setVerses(chunksVerses);
-    setIsLoading(false);
+    setIsLoadingImages(false);
+
+    // Clear last downloaded page after completion
+    await AsyncStorage.removeItem("lastDownloadedPage");
   } catch (error) {
     console.error("Error fetching or downloading data: ", error);
-    setIsLoading(false);
+    setIsLoadingImages(false);
   }
 };
 
 export const checkForDownloadedImages = async ({
-  setIsLoading,
+  setIsLoadingImages,
   setLocalImageUris,
   setVerses,
-  setProgress,
+  setProgressImages,
   TOTAL_PAGES,
 }: {
   TOTAL_PAGES: number;
-  setIsLoading: (isLoaded: boolean) => void;
-  setProgress: (currentNum: number) => void;
+  setIsLoadingImages: (isLoaded: boolean) => void;
+  setProgressImages: (currentNum: number) => void;
   setLocalImageUris: (arr: any[]) => void;
   setVerses: (arr: any[]) => void;
 }) => {
-  setIsLoading(true);
+  setIsLoadingImages(true);
 
   try {
     const downloadedPagesData = await AsyncStorage.getItem(
       "downloadedQuranPages"
     );
-
     if (downloadedPagesData) {
       const downloadedPages = JSON.parse(downloadedPagesData);
+      if (downloadedPages.length < 604) {
+        console.log("working from here");
 
-      // let imageUris: string[] = [];
-      // let versesData: any[] = [];
+        fetchAndDownloadImages({
+          setProgressImages,
+          setIsLoadingImages,
+          TOTAL_PAGES,
+          setLocalImageUris,
+          setVerses,
+        });
+        return;
+      }
 
-      // for (let i = 0; i < 5; i++) {
-      //   const imagePath = `${FileSystem.documentDirectory}quran-page-${downloadedPages[i]}.jpg`;
-      //   const fileInfo = await FileSystem.getInfoAsync(imagePath);
-      //   if (fileInfo.exists) {
-      //     // Convert file path to content URI for better compatibility with WebView
-      //     const contentUri = await FileSystem.getContentUriAsync(imagePath);
-      //     imageUris.push(contentUri); // Store the content URI instead of file path
-
-      //     // Load verses from file system
-      //     const versesPath = `${FileSystem.documentDirectory}quran-page-${downloadedPages[i]}-verses.json`;
-      //     const versesFile = await FileSystem.readAsStringAsync(versesPath);
-      //     versesData.push(JSON.parse(versesFile));
-      //   }
-      // }
-
-      //   // Loop through downloaded pages and load data from file system
-      //   for (let page of downloadedPages) {
-      //     const imagePath = `${FileSystem.documentDirectory}quran-page-${page}.jpg`;
-      //     const fileInfo = await FileSystem.getInfoAsync(imagePath);
-
-      //     if (fileInfo.exists) {
-      //       // Convert file path to content URI for better compatibility with WebView
-      //       const contentUri = await FileSystem.getContentUriAsync(imagePath);
-      //       imageUris.push(contentUri); // Store the content URI instead of file path
-
-      //       // Load verses from file system
-      //       const versesPath = `${FileSystem.documentDirectory}quran-page-${page}-verses.json`;
-      //       const versesFile = await FileSystem.readAsStringAsync(versesPath);
-      //       versesData.push(JSON.parse(versesFile));
-      //     }
-      //   }
       const { chunksUris, chunksVerses } = await setUrisWithChunks({
         limit: 604,
         start: 0,
@@ -188,12 +174,12 @@ export const checkForDownloadedImages = async ({
 
       setLocalImageUris([...chunksUris.reverse()]);
       setVerses(chunksVerses);
-      setIsLoading(false);
+      setIsLoadingImages(false);
     } else {
       // If no images found in AsyncStorage, fetch and download them
       fetchAndDownloadImages({
-        setProgress,
-        setIsLoading,
+        setProgressImages,
+        setIsLoadingImages,
         TOTAL_PAGES,
         setLocalImageUris,
         setVerses,
@@ -201,6 +187,6 @@ export const checkForDownloadedImages = async ({
     }
   } catch (error) {
     console.error("Error checking for downloaded images: ", error);
-    setIsLoading(false);
+    setIsLoadingImages(false);
   }
 };

@@ -1,7 +1,6 @@
 import { collection, doc, getDoc, getDocs } from "firebase/firestore";
 import { db } from "../config/firebase";
 
-
 // Define interfaces for the subject and teacher data
 interface Subject {
   id: string;
@@ -9,6 +8,7 @@ interface Subject {
   teacher_id: string;
   order: string;
   subjectName?: string; // Optional, to be added after fetching
+  teacherName: string;
 }
 
 interface Teacher {
@@ -52,6 +52,7 @@ export const fetchSchedule = async (levelId: string): Promise<ScheduleData> => {
           day,
           "schedule_subjects"
         );
+
         const daySnapshot = await getDocs(dayRef);
 
         const subjects: Subject[] = [];

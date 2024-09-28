@@ -32,7 +32,7 @@ const Home = () => {
     { iconName: "table", text: "Teacher Table", screen: "TeacherTable" },
 
     { iconName: "table", text: "Kids Routine Table", screen: "kidsRoutine" },
-    { iconName: "question", text: "Quiz", screen: "quiz" },
+    { iconName: "question", text: "Quiz", screen: "quizList" },
     { iconName: "bar-chart", text: "Grades", screen: "grade" },
     { iconName: "bar-chart", text: "Kids Grade", screen: "KidsGrade" },
     { iconName: "user", text: "Staff", screen: "staff" },
@@ -44,6 +44,7 @@ const Home = () => {
     { iconName: "qrcode", text: "Attendance", screen: "attendance" },
     { iconName: "check", text: "Kids Attendance", screen: "parentAttendance" },
     { iconName: "calendar", text: "Calendar", screen: "calendar" },
+    { iconName: "bookmark", text: "Quran", screen: "quran" },
   ];
 
   const filteredArr = arr.filter((item) => {
@@ -77,8 +78,6 @@ const Home = () => {
     }
     return true;
   });
-
-  // { iconName: "sign-out", text: "Log out " ,screen :"Login" },
 
   const dispatch = useAppDispatch();
   const handleLogout = async () => {

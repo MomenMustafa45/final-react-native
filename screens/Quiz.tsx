@@ -28,8 +28,9 @@ const Quiz = () => {
   const [subject, setSubject] = useState(null); // Initialize with null
   const [isloading, setIsLoading] = useState(false);
   const navigate = useNavigation<RootNavigationParamList>();
-  const route = useRoute();
+  const route = useRoute<any>();
   const { subjectId } = route.params; // Get subjectId from params
+  console.log("hello from squiz", subjectId);
 
   // Ensure subjectId is properly assigned and is not undefined
   useEffect(() => {

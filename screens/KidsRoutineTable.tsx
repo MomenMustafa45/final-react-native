@@ -12,7 +12,7 @@ import { TabView, SceneMap, TabBar } from "react-native-tab-view";
 import { fetchSchedule } from "../services/scheduleServices";
 import { useAppSelector } from "../hooks/reduxHooks";
 import Headero from "./components/Header";
-import { Picker } from '@react-native-picker/picker'; // Updated import
+import { Picker } from "@react-native-picker/picker"; // Updated import
 
 const KidsRoutine = () => {
   const [selectedKid, setSelectedKid] = useState("");
@@ -36,10 +36,10 @@ const KidsRoutine = () => {
       setError(null); // Reset error before fetching
       try {
         const schedule = await fetchSchedule(selectedKid); // Use the selectedKid to fetch schedule
-        console.log("Fetched schedule:", schedule); // Log the fetched schedule
         if (schedule && schedule.days && schedule.days.length > 0) {
           setScheduleTable(schedule);
         } else {
+          setScheduleTable(null);
           setError("No schedule found for the selected student.");
         }
       } catch (error) {
@@ -64,15 +64,16 @@ const KidsRoutine = () => {
     />
   );
 
-  const renderScene = scheduleTable && scheduleTable.days.length > 0
-    ? SceneMap({
-        sunday: () => <DaySchedule day={scheduleTable.days[0]} />,
-        monday: () => <DaySchedule day={scheduleTable.days[1]} />,
-        tuesday: () => <DaySchedule day={scheduleTable.days[2]} />,
-        wednesday: () => <DaySchedule day={scheduleTable.days[3]} />,
-        thursday: () => <DaySchedule day={scheduleTable.days[4]} />,
-      })
-    : null;
+  const renderScene =
+    scheduleTable && scheduleTable.days.length > 0
+      ? SceneMap({
+          sunday: () => <DaySchedule day={scheduleTable.days[0]} />,
+          monday: () => <DaySchedule day={scheduleTable.days[1]} />,
+          tuesday: () => <DaySchedule day={scheduleTable.days[2]} />,
+          wednesday: () => <DaySchedule day={scheduleTable.days[3]} />,
+          thursday: () => <DaySchedule day={scheduleTable.days[4]} />,
+        })
+      : null;
 
   return (
     <ImageBackground
@@ -84,12 +85,14 @@ const KidsRoutine = () => {
         <Text style={styles.header}>Select a Student</Text>
         <Picker
           selectedValue={selectedKid}
-          onValueChange={(itemValue) => setSelectedKid(itemValue)}
+          onValueChange={(itemValue) => {
+            setSelectedKid(itemValue);
+          }}
           style={styles.picker}
         >
-          <Picker.Item label="Select a kid" value="" />
+          <Picker.Item label="Select a kid" value="" enabled={false} />
           {kids.map((kid) => (
-            <Picker.Item key={kid.id} label={kid.name} value={kid.id} />
+            <Picker.Item key={kid.id} label={kid.name} value={kid.class_id} />
           ))}
         </Picker>
         <Button title="View Schedule" onPress={handleViewSchedule} />
@@ -126,8 +129,8 @@ const DaySchedule = ({ day }) => {
         {day.subjects.map((subj, index) => (
           <View key={index} style={styles.card}>
             <Text style={styles.periodNumber}>Period {index + 1}</Text>
-            <Text style={styles.subjectName}>{subj.subject_name}</Text>
-            <Text style={styles.teacherName}>{subj.teacher_name}</Text>
+            <Text style={styles.subjectName}>{subj.subjectName}</Text>
+            <Text style={styles.teacherName}>{subj.teacherName}</Text>
           </View>
         ))}
       </View>
