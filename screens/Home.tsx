@@ -1,4 +1,10 @@
-import { View, Text, StyleSheet, ImageBackground } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  ImageBackground,
+  ScrollView,
+} from "react-native";
 import React from "react";
 import { Avatar, ButtonGroup } from "@rneui/themed";
 import Icon from "react-native-vector-icons/FontAwesome";
@@ -15,7 +21,6 @@ import { useAppDispatch, useAppSelector } from "../hooks/reduxHooks";
 import Headero from "./components/Header";
 
 // import Icon from "react-native-vector-icons/Ionicons"; // مثال لاستيراد مكتبة Ionicons
-
 
 const Home = () => {
   const userInfo = useAppSelector((state) => state.user.user);
@@ -34,27 +39,37 @@ const Home = () => {
     { iconName: "phone", text: "Ask Doubts", screen: "contact" },
     { iconName: "image", text: "School Gallery", screen: "gallary" },
     { iconName: "comments", text: "Class Chat", screen: "chat" },
-    
+
     // { iconName: "image", text: "School gallary", screen: "gallary" },
     { iconName: "qrcode", text: "Attendance", screen: "attendance" },
     { iconName: "check", text: "Kids Attendance", screen: "parentAttendance" },
     { iconName: "calendar", text: "Calendar", screen: "calendar" },
-
   ];
 
   const filteredArr = arr.filter((item) => {
     if (userInfo.role === "parent") {
-      return !["routine",  "grade",  "quiz","Subjects","attendance",'TeacherTable'].includes(item.screen);
+      return ![
+        "routine",
+        "grade",
+        "quiz",
+        "Subjects",
+        "attendance",
+        "TeacherTable",
+      ].includes(item.screen);
     }
     if (userInfo.role === "student") {
-      return !["kidsRoutine", "KidsGrade" , 'TeacherTable' , "parentAttendance"].includes(item.screen);
+      return ![
+        "kidsRoutine",
+        "KidsGrade",
+        "TeacherTable",
+        "parentAttendance",
+      ].includes(item.screen);
     }
     return true; // Show all for other roles
   });
 
-   
-    // { iconName: "sign-out", text: "Log out " ,screen :"Login" },
-  
+  // { iconName: "sign-out", text: "Log out " ,screen :"Login" },
+
   const dispatch = useAppDispatch();
   const handleLogout = async () => {
     try {
@@ -75,27 +90,29 @@ const Home = () => {
       style={styles.background}
     >
       <Headero />
-      <View style={styles.container}>
-        <View style={styles.cardContainer}>
-          {filteredArr.map((item, index) => (
-            <TouchableOpacity
-              key={index}
-              style={styles.card}
-              onPress={() => navigation.navigate(item.screen)}
-            >
-              <View style={styles.iconContainer}>
-                <Icon
-                  name={item.iconName}
-                  size={50}
-                  color="#900"
-                  style={styles.icon}
-                />
-                <Text style={styles.cardText}>{item.text}</Text>
-              </View>
-            </TouchableOpacity>
-          ))}
+      <ScrollView style={{ flex: 1 }}>
+        <View style={styles.container}>
+          <View style={styles.cardContainer}>
+            {filteredArr.map((item, index) => (
+              <TouchableOpacity
+                key={index}
+                style={styles.card}
+                onPress={() => navigation.navigate(item.screen)}
+              >
+                <View style={styles.iconContainer}>
+                  <Icon
+                    name={item.iconName}
+                    size={50}
+                    color="#900"
+                    style={styles.icon}
+                  />
+                  <Text style={styles.cardText}>{item.text}</Text>
+                </View>
+              </TouchableOpacity>
+            ))}
+          </View>
         </View>
-      </View>
+      </ScrollView>
     </ImageBackground>
   );
 };
