@@ -1,26 +1,16 @@
-import React, { useEffect, useState } from "react";
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  FlatList,
-  ImageBackground,
-  StyleSheet,
-  Image,
-} from "react-native";
-import { useDispatch } from "react-redux";
-import { fetchSubjectsByLevel } from "../services/subjectServices";
-import { useAppSelector } from "../hooks/reduxHooks";
-import { useNavigation } from "@react-navigation/native";
-import Loader from "./components/Loader";
-import Headero from "./components/Header";
+import React, { useEffect, useState } from 'react';
+import { View, Text, Image, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
+import { useDispatch } from 'react-redux';
+import { fetchSubjectsByLevel } from '../services/subjectServices';
+import { useAppSelector } from '../hooks/reduxHooks';
+import Headero from './components/Header';
+import { useNavigation } from '@react-navigation/native';
 
-function Subjects() {
+const Subjects = () => {
   const [filteredSubjects, setFilteredSubjects] = useState([]);
-  const [loading, setLoading] = useState(true); // حالة التحميل
   const dispatch = useDispatch();
   const userInfo = useAppSelector((state) => state.user.user);
-  const navigation = useNavigation();
+  const navigation = useNavigation(); // تغيير هنا
 
   useEffect(() => {
     const loadSubjects = async () => {
@@ -28,147 +18,117 @@ function Subjects() {
         const data = await fetchSubjectsByLevel(userInfo.class_id);
         setFilteredSubjects(data);
       }
-      setLoading(false); // إنهاء حالة التحميل بعد استرجاع البيانات
     };
 
     loadSubjects();
-  }, [userInfo.class_id]);
+  }, [dispatch, userInfo.class_id]);
 
   const handleButtonClick = (subjectId) => {
-    navigation.navigate("QuizScreen", { subjectId });
-  };
-
-  const showDetails = (subjectId) => {
-    navigation.navigate("SubjectDetails", { subjectId });
+    console.log('Navigating with subjectId:', subjectId);
+    navigation.navigate('SubjectDetails', { subjectId }); // تصحيح هنا
   };
 
   return (
-    <ImageBackground
-      source={require("../assets/images/schaduel.png")}
-      style={styles.background}
-    >
-    <Headero/>
+    <View style={styles.container}>
+      <Headero />
+      <ScrollView contentContainerStyle={styles.grid}>
+        {filteredSubjects.map((subject) => (
+          <View key={subject.id} style={styles.card}>
+            <TouchableOpacity style={styles.flipCard} onPress={() => handleButtonClick(subject.id)}>
+              <Text style={styles.coverText}>
+                Education is the most powerful weapon you can use to change the world
+              </Text>
+              <View style={styles.cardFront}>
+                <Image source={{ uri: subject.photoURL }} style={styles.cardImage} />
+              </View>
+            </TouchableOpacity>
 
-      <View style={styles.container}>
-        <View style={styles.greetingContainer}>
-          {/* <Text style={styles.greetingText}>Hi {userInfo.name}</Text> */}
-
-        </View>
-
-        {loading ? ( // عرض Loader أثناء التحميل
-          <Loader/>
-        ) : (
-          <FlatList
-            data={filteredSubjects}
-            keyExtractor={(item) => item.id.toString()}
-            renderItem={({ item }) => (
+            <View style={styles.insidePage}>
+              <Text style={styles.subjectName}>{subject.name}</Text>
+              <Text style={styles.subjectDescription}>{subject.description}</Text>
               <TouchableOpacity
-                style={styles.card}
-                onPress={() => handleButtonClick(item.id)}
+                style={styles.materialButton}
+                onPress={() => handleButtonClick(subject.id)}
               >
-                <View style={styles.iconContainer}>
-                  <Image
-                    style={styles.stretch}
-                    source={{ uri: item.photoURL }} // Use dynamic image URL
-                  />
-                  <Text style={styles.subjectName}>{item.name}</Text>
-                  <Text style={styles.description}>{item.description}</Text>
-
-                  <TouchableOpacity
-                    style={styles.materialsButton}
-                    onPress={() => showDetails(item.id)}
-                  >
-                    <Text style={styles.materialsButtonText}>See Material</Text>
-                  </TouchableOpacity>
-                </View>
+                <Text style={styles.materialButtonText}>See Materials</Text>
               </TouchableOpacity>
-            )}
-            numColumns={2}
-            contentContainerStyle={styles.cardContainer}
-          />
-        )}
-      </View>
-    </ImageBackground>
+            </View>
+          </View>
+        ))}
+      </ScrollView>
+    </View>
   );
-}
-
-export default Subjects;
+};
 
 const styles = StyleSheet.create({
-  background: {
-    flex: 1,
-    resizeMode: "cover",
-    margin: 0,
-    padding: 0,
-  },
   container: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    padding: 20,
-    marginTop:100
-
+    padding: 16,
+    backgroundColor: '#f0f0f0',
   },
-  stretch: {
-    width: 100,
-    height: 100,
-    resizeMode: 'cover',
-  },
-  greetingContainer: {
-    marginBottom: 20,
-    flexDirection: "row",
-    gap: 20,
-  },
-  greetingText: {
-    fontWeight: "bold",
-    fontSize: 20,
-  },
-  cardContainer: {
-    justifyContent: "center",
-    
+  grid: {
+    flexDirection: 'column',
+    justifyContent: 'flex-start',
   },
   card: {
-    backgroundColor: "#f5f6fc",
-    width: 340,
-    height: 350,
-    borderRadius: 10,
-    justifyContent: "center",
-    alignItems: "center",
-    margin: 10,
-    borderColor: "#9ca3af",
-    borderWidth: 1,
+    width: '100%',
+    marginBottom: 20,
+    borderRadius: 8,
+    overflow: 'hidden',
+    backgroundColor: 'white',
+    elevation: 2,
+    padding: 10,
   },
-  iconContainer: {
-    alignItems: "center",
-    height: 200,
+  flipCard: {
+    position: 'relative',
+    overflow: 'hidden',
+  },
+  coverText: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    textAlign: 'center',
+    justifyContent: 'center',
+    alignItems: 'center',
+    color: 'white',
+    backgroundColor: '#1A8895',
+    padding: 8,
+  },
+  cardFront: {
+    overflow: 'hidden',
+    alignItems: 'center',
+  },
+  cardImage: {
+    width: '100%',
+    height: 120,
+    resizeMode: 'cover',
+  },
+  insidePage: {
+    padding: 8,
+    alignItems: 'center',
   },
   subjectName: {
-    fontWeight: "bold",
-    color: "black",
-    fontSize: 20,
-    textAlign: "left",
-    marginBottom: 5,
-  },
-  description: {
-    color: "#6b7280",
-    fontSize: 14,
-    textAlign: "center",
-    paddingHorizontal: 5,
-  },
-  materialsButton: {
-    marginTop: 10,
-    paddingHorizontal: 25,
-    paddingVertical: 15,
-    backgroundColor: "#ea580c",
-    borderRadius: 25,
-    width: '80%',
-    alignItems: 'center',
-    marginBottom: 50,
-  },
-  materialsButtonText: {
-    color: "#fff",
-    fontWeight: "bold",
     fontSize: 16,
-    textAlign: "center",
+    fontWeight: 'bold',
+    marginBottom: 4,
+    textAlign: 'center',
+  },
+  subjectDescription: {
+    marginBottom: 8,
+    textAlign: 'center',
+  },
+  materialButton: {
+    padding: 10,
+    backgroundColor: '#ff4e31',
+    borderRadius: 4,
+    alignItems: 'center',
+    width: 300,
+  },
+  materialButtonText: {
+    color: 'white',
   },
 });
+
+export default Subjects;

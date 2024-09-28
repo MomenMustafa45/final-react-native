@@ -23,7 +23,7 @@ const Home = () => {
   const arr = [
     { iconName: "book", text: "Subjects", screen: "Subjects" },
     { iconName: "table", text: "Routine Table", screen: "routine" },
-    { iconName: "table", text: "Routine Table", screen: "TeacherTable" },
+    { iconName: "table", text: "Teacher Table", screen: "TeacherTable" },
 
     { iconName: "table", text: "Kids Routine Table", screen: "kidsRoutine" },
     { iconName: "question", text: "Quiz", screen: "quiz" },
@@ -40,12 +40,15 @@ const Home = () => {
 
   const filteredArr = arr.filter((item) => {
     if (userInfo.role === "parent") {
-      return !["routine",  "grade",  "quiz","Subjects"].includes(item.screen);
+      return !["routine",  "grade",  "quiz","Subjects","TeacherTable"].includes(item.screen);
+    }
+    if (userInfo.role === "teacher") {
+      return !["routine",  "grade",  "quiz","Subjects","kidsRoutine", "KidsGrade"].includes(item.screen);
     }
     if (userInfo.role === "student") {
-      return !["kidsRoutine", "KidsGrade"].includes(item.screen);
+      return !["kidsRoutine", "KidsGrade","TeacherTable"].includes(item.screen);
     }
-    return true; // Show all for other roles
+    return true; 
   });
 
   const dispatch = useAppDispatch();
