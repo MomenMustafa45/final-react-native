@@ -29,7 +29,7 @@ const Home = () => {
   const arr = [
     { iconName: "book", text: "Subjects", screen: "Subjects" },
     { iconName: "table", text: "Routine Table", screen: "routine" },
-    { iconName: "table", text: "Routine Table", screen: "TeacherTable" },
+    { iconName: "table", text: "Teacher Table", screen: "TeacherTable" },
 
     { iconName: "table", text: "Kids Routine Table", screen: "kidsRoutine" },
     { iconName: "question", text: "Quiz", screen: "quiz" },
@@ -57,6 +57,16 @@ const Home = () => {
         "TeacherTable",
       ].includes(item.screen);
     }
+    if (userInfo.role === "teacher") {
+      return ![
+        "routine",
+        "grade",
+        "quiz",
+        "Subjects",
+        "kidsRoutine",
+        "KidsGrade",
+      ].includes(item.screen);
+    }
     if (userInfo.role === "student") {
       return ![
         "kidsRoutine",
@@ -65,7 +75,7 @@ const Home = () => {
         "parentAttendance",
       ].includes(item.screen);
     }
-    return true; // Show all for other roles
+    return true;
   });
 
   // { iconName: "sign-out", text: "Log out " ,screen :"Login" },
