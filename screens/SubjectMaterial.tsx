@@ -1,7 +1,13 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, StyleSheet, ImageBackground, FlatList } from "react-native";
-import { useRoute } from "@react-navigation/native"; 
-import { Video } from 'expo-av';
+import {
+  View,
+  Text,
+  StyleSheet,
+  ImageBackground,
+  FlatList,
+} from "react-native";
+import { useRoute } from "@react-navigation/native"; // لاستخدام الـ Route
+import { ResizeMode, Video } from "expo-av";
 
 import { getSubjectById } from "../services/subjectServices";
 
@@ -59,8 +65,8 @@ function SubjectDetails() {
               <Video
                 source={{ uri: item }} // عرض الفيديوهات من الروابط
                 style={styles.video}
-                controls={true} // أدوات التحكم بالفيديو
-                resizeMode="contain"
+                resizeMode={ResizeMode.CONTAIN}
+                useNativeControls
               />
             </View>
           )}

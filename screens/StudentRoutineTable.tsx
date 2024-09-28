@@ -111,13 +111,14 @@ const DaySchedule = ({ day }) => (
   <ScrollView>
     <View style={styles.tableContainer}>
       {day.subjects.map((subj, index) => {
-        const periodTime = index === 0
-          ? "7:00-9:00"
-          : index === 1
-          ? "9:00-11:00"
-          : index === 2
-          ? "11:00-1:00"
-          : "1:00-3:00";
+        const periodTime =
+          index === 0
+            ? "7:00-9:00"
+            : index === 1
+            ? "9:00-11:00"
+            : index === 2
+            ? "11:00-1:00"
+            : "1:00-3:00";
 
         return (
           <View key={index} style={styles.card}>

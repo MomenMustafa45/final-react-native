@@ -90,7 +90,7 @@ export const checkIfStudentCompletedQuiz = async (
     const quizDocRef = doc(db, "subjects", subjectId); // Replace "quizDocId" with actual quiz document ID
     const quizDoc = await getDoc(quizDocRef);
 
-    if (quizDoc.data().visitedExam.includes(studentId)) {
+    if (quizDoc.data().visitedExam?.includes(studentId)) {
       console.log("this student visited the exam");
       return true;
     } else {
@@ -98,7 +98,6 @@ export const checkIfStudentCompletedQuiz = async (
       return false;
     }
   } catch (error) {
-    console.error("Error checking quiz completion status: ", error);
     return false;
   }
 };
