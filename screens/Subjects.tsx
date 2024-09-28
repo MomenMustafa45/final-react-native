@@ -99,9 +99,9 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   stretch: {
-    width: 100,  // Adjust width as needed
+    width: 100, // Adjust width as needed
     height: 100, // Adjust height as needed
-    resizeMode: 'cover', // Ensures the image covers the area without stretching
+    resizeMode: "cover", // Ensures the image covers the area without stretching
   },
   greetingContainer: {
     marginBottom: 20,
@@ -130,7 +130,7 @@ const styles = StyleSheet.create({
   iconContainer: {
     alignItems: "center",
     // padding: 15,
-    height:200
+    height: 200,
   },
   subjectName: {
     fontWeight: "bold",
@@ -144,7 +144,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
     textAlign: "center",
     // marginBottom: 10,
-    paddingHorizontal:5
+    paddingHorizontal: 5,
   },
   materialsButton: {
     marginTop: 10,
@@ -152,9 +152,9 @@ const styles = StyleSheet.create({
     paddingVertical: 15,
     backgroundColor: "#1e40af",
     borderRadius: 25,
-    width: '80%',
-    alignItems: 'center',
-    marginBottom:50
+    width: "80%",
+    alignItems: "center",
+    marginBottom: 50,
   },
   materialsButtonText: {
     color: "#fff",

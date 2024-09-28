@@ -16,12 +16,12 @@ const initialState: UserState = {
     role: "",
 
     ////////////////////////
-    photoURL:"",
+    photoURL: "",
   },
 };
 
 export const userSlice = createSlice({
-  name: "counter",
+  name: "user",
   initialState,
   reducers: {
     setUser: (state, action) => {
@@ -37,7 +37,7 @@ export const userSlice = createSlice({
         email: "",
         age: 0,
         role: "",
-        photoURL:"",
+        photoURL: "",
       };
     },
   },

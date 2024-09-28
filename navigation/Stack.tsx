@@ -8,10 +8,11 @@ import Quiz from "../screens/Quiz";
 import Staff from "../screens/Staff";
 import Contact from "../screens/Contact";
 import Grades from "../screens/Grades";
-import RoutineTable from "../screens/RoutineTable";
 import StudentRoutineTable from "../screens/StudentRoutineTable";
 import SchoolGallary from "../screens/SchoolGallary";
 import SubjectDetails from "../screens/SubjectMaterial";
+import QuizList from "../screens/QuizList";
+import QuranScreen from "../screens/QuranScreen";
 
 export type RootNavigationParamList = {
   navigate(arg0: string): unknown;
@@ -20,12 +21,12 @@ export type RootNavigationParamList = {
 
   Login: undefined;
   Subjects: undefined;
-  quiz: undefined;
+  quiz: { subjectId: string };
+  quizList: undefined;
   staff: undefined;
   // contact: undefined;
-
+  quran: undefined;
   grade: undefined;
-
   contact: undefined;
   routine: undefined;
   gallary: undefined;
@@ -48,13 +49,12 @@ const StackNavigation = () => {
       <Stack.Screen name="contact" component={Contact} />
       <Stack.Screen name="grade" component={Grades} />
       <Stack.Screen name="quiz" component={Quiz} />
+      <Stack.Screen name="quizList" component={QuizList} />
       <Stack.Screen name="gallary" component={SchoolGallary} />
       <Stack.Screen name="SubjectDetails" component={SubjectDetails} />
 
       <Stack.Screen name="routine" component={StudentRoutineTable} />
-
-
-
+      <Stack.Screen name="quran" component={QuranScreen} />
     </Stack.Navigator>
   );
 };

@@ -19,9 +19,9 @@ import Headero from "./components/Header";
 const renderTabBar = (props) => (
   <TabBar
     {...props}
-    indicatorStyle={{ backgroundColor: "#fff" ,borderRadius:10}}
-    style={{ backgroundColor: "#fff" ,borderRadius:10,marginHorizontal:15}}
-    labelStyle={{ color: "#000",borderRadius:10 }}
+    indicatorStyle={{ backgroundColor: "#fff", borderRadius: 10 }}
+    style={{ backgroundColor: "#fff", borderRadius: 10, marginHorizontal: 15 }}
+    labelStyle={{ color: "#000", borderRadius: 10 }}
     activeColor="#1e40af"
     inactiveColor="#000"
   />
@@ -126,13 +126,14 @@ const DaySchedule = ({ day }) => (
     {/* <Text style={styles.title}>{day.dayName}</Text> */}
     <View style={styles.tableContainer}>
       {day.subjects.map((subj, index) => {
-        const periodTime = index === 0
-          ? "7:00-9:00"
-          : index === 1
-          ? "9:00-11:00"
-          : index === 2
-          ? "11:00-1:00"
-          : "1:00-3:00";
+        const periodTime =
+          index === 0
+            ? "7:00-9:00"
+            : index === 1
+            ? "9:00-11:00"
+            : index === 2
+            ? "11:00-1:00"
+            : "1:00-3:00";
 
         return (
           <View key={index} style={styles.card}>

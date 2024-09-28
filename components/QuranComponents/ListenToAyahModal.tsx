@@ -5,13 +5,12 @@ import { AntDesign } from "@expo/vector-icons";
 import { TouchableOpacity } from "react-native";
 import { StyleSheet } from "react-native";
 import { Audio } from "expo-av";
-import { VerseType } from "../../screens/QuranScreen";
 
 type ListenToAyahModal = {
   modalVisible: boolean;
   setVerseModal: (value: null | string) => void;
   setModalVisible: (value: boolean) => void;
-  verseModal: VerseType | null;
+  verseModal: any | null;
 };
 
 const ListenToAyahModal = ({
@@ -25,7 +24,7 @@ const ListenToAyahModal = ({
   async function playSound() {
     console.log("Loading Sound");
     const { sound } = await Audio.Sound.createAsync(
-      require("../../../../assets/images/song.mp3")
+      require("../../assets/images/song.mp3")
     );
     setSound(sound);
 
@@ -72,19 +71,7 @@ const ListenToAyahModal = ({
               }}
             >
               <Image
-                source={require("../../../../assets/images/listenImgThree.png")}
-                className="w-full h-full"
-              />
-            </TouchableOpacity>
-            <TouchableOpacity className=" w-8 h-8">
-              <Image
-                source={require("../../../../assets/images/listenImgTwo.png")}
-                className="w-full h-full"
-              />
-            </TouchableOpacity>
-            <TouchableOpacity className=" w-8 h-8">
-              <Image
-                source={require("../../../../assets/images/listenOneImg.png")}
+                source={require("../../assets/images/login-img.png")}
                 className="w-full h-full"
               />
             </TouchableOpacity>

@@ -23,13 +23,13 @@ const Home = () => {
   const arr = [
     { iconName: "book", text: "Subjects", screen: "Subjects" },
     { iconName: "table", text: "Routine Table", screen: "routine" },
-    { iconName: "question", text: "Quiz", screen: "quiz" },
+    { iconName: "question", text: "Quiz", screen: "quizList" },
     { iconName: "bar-chart", text: "Grades", screen: "grade" },
     { iconName: "user", text: "Staff", screen: "staff" },
     { iconName: "phone", text: "Ask Doubts", screen: "contact" },
     { iconName: "image", text: "School gallary", screen: "gallary" },
+    { iconName: "book", text: "Mosahaf", screen: "quran" },
     // { iconName: "sign-out", text: "Log out " ,screen :"Login" },
-    
   ];
   const dispatch = useAppDispatch();
   const navigate = useNavigation();
@@ -53,7 +53,7 @@ const Home = () => {
       source={require("../assets/images/home-bg.jpeg")} // Use require for local images
       style={styles.background}
     >
-      <Headero/>
+      <Headero />
       <View style={styles.container}>
         <View style={styles.cardContainer}>
           {arr.map((item, index) => (
