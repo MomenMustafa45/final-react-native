@@ -9,16 +9,14 @@ import {
 import { useRoute } from "@react-navigation/native"; // لاستخدام الـ Route
 import { ResizeMode, Video } from "expo-av";
 
-// استيراد خدمة الـ Firebase
 import { getSubjectById } from "../services/subjectServices";
 
 function SubjectDetails() {
   const route = useRoute();
-  const { subjectId } = route.params || {}; // الحصول على subjectId من الـ Route
+  const { subjectId } = route.params || {}; 
   const [videos, setVideos] = useState([]);
   const [subject, setSubject] = useState(null);
 
-  // استخدام useEffect لجلب بيانات المادة بناءً على subjectId
   useEffect(() => {
     if (!subjectId) {
       console.error("No subjectId found in route.params");
@@ -30,7 +28,7 @@ function SubjectDetails() {
         const subjectData = await getSubjectById(id);
         if (subjectData) {
           setSubject(subjectData);
-          setVideos(subjectData.videoUrls || []); // تعيين قائمة الفيديوهات
+          setVideos(subjectData.videoUrls || []); 
         } else {
           console.error("No subject data found!");
         }

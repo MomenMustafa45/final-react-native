@@ -6,15 +6,18 @@ import {
   FlatList,
   ImageBackground,
   StyleSheet,
-  Image, // Import Image from 'react-native'
+  Image,
 } from "react-native";
 import { useDispatch } from "react-redux";
 import { fetchSubjectsByLevel } from "../services/subjectServices";
 import { useAppSelector } from "../hooks/reduxHooks";
 import { useNavigation } from "@react-navigation/native";
+import Loader from "./components/Loader";
+import Headero from "./components/Header";
 
 function Subjects() {
   const [filteredSubjects, setFilteredSubjects] = useState([]);
+  const [loading, setLoading] = useState(true); // حالة التحميل
   const dispatch = useDispatch();
   const userInfo = useAppSelector((state) => state.user.user);
   const navigation = useNavigation();
@@ -25,59 +28,65 @@ function Subjects() {
         const data = await fetchSubjectsByLevel(userInfo.class_id);
         setFilteredSubjects(data);
       }
+      setLoading(false); // إنهاء حالة التحميل بعد استرجاع البيانات
     };
 
     loadSubjects();
   }, [userInfo.class_id]);
 
-  // Function to handle navigation to QuizScreen
   const handleButtonClick = (subjectId) => {
     navigation.navigate("QuizScreen", { subjectId });
   };
 
-  // Function to handle navigation to SubjectDetailsScreen
   const showDetails = (subjectId) => {
     navigation.navigate("SubjectDetails", { subjectId });
   };
 
   return (
     <ImageBackground
-      source={require("../assets/images/home-bg.jpeg")}
+      source={require("../assets/images/schaduel.png")}
       style={styles.background}
     >
+    <Headero/>
+
       <View style={styles.container}>
         <View style={styles.greetingContainer}>
-          <Text style={styles.greetingText}>Hi {userInfo.name}</Text>
+          {/* <Text style={styles.greetingText}>Hi {userInfo.name}</Text> */}
+
         </View>
 
-        <FlatList
-          data={filteredSubjects}
-          keyExtractor={(item) => item.id.toString()}
-          renderItem={({ item }) => (
-            <TouchableOpacity
-              style={styles.card}
-              onPress={() => handleButtonClick(item.id)}
-            >
-              <View style={styles.iconContainer}>
-                <Image
-                  style={styles.stretch}
-                  source={{ uri: item.photoURL }} // Use dynamic image URL
-                />
-                <Text style={styles.subjectName}>{item.name}</Text>
-                <Text style={styles.description}>{item.description}</Text>
+        {loading ? ( // عرض Loader أثناء التحميل
+          <Loader/>
+        ) : (
+          <FlatList
+            data={filteredSubjects}
+            keyExtractor={(item) => item.id.toString()}
+            renderItem={({ item }) => (
+              <TouchableOpacity
+                style={styles.card}
+                onPress={() => handleButtonClick(item.id)}
+              >
+                <View style={styles.iconContainer}>
+                  <Image
+                    style={styles.stretch}
+                    source={{ uri: item.photoURL }} // Use dynamic image URL
+                  />
+                  <Text style={styles.subjectName}>{item.name}</Text>
+                  <Text style={styles.description}>{item.description}</Text>
 
-                <TouchableOpacity
-                  style={styles.materialsButton}
-                  onPress={() => showDetails(item.id)}
-                >
-                  <Text style={styles.materialsButtonText}>See Material</Text>
-                </TouchableOpacity>
-              </View>
-            </TouchableOpacity>
-          )}
-          numColumns={2}
-          contentContainerStyle={styles.cardContainer}
-        />
+                  <TouchableOpacity
+                    style={styles.materialsButton}
+                    onPress={() => showDetails(item.id)}
+                  >
+                    <Text style={styles.materialsButtonText}>See Material</Text>
+                  </TouchableOpacity>
+                </View>
+              </TouchableOpacity>
+            )}
+            numColumns={2}
+            contentContainerStyle={styles.cardContainer}
+          />
+        )}
       </View>
     </ImageBackground>
   );
@@ -97,11 +106,13 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     padding: 20,
+    marginTop:100
+
   },
   stretch: {
-    width: 100, // Adjust width as needed
-    height: 100, // Adjust height as needed
-    resizeMode: "cover", // Ensures the image covers the area without stretching
+    width: 100,
+    height: 100,
+    resizeMode: 'cover',
   },
   greetingContainer: {
     marginBottom: 20,
@@ -111,10 +122,10 @@ const styles = StyleSheet.create({
   greetingText: {
     fontWeight: "bold",
     fontSize: 20,
-    // marginBottom: 10,
   },
   cardContainer: {
     justifyContent: "center",
+    
   },
   card: {
     backgroundColor: "#f5f6fc",
@@ -129,7 +140,6 @@ const styles = StyleSheet.create({
   },
   iconContainer: {
     alignItems: "center",
-    // padding: 15,
     height: 200,
   },
   subjectName: {
@@ -143,17 +153,16 @@ const styles = StyleSheet.create({
     color: "#6b7280",
     fontSize: 14,
     textAlign: "center",
-    // marginBottom: 10,
     paddingHorizontal: 5,
   },
   materialsButton: {
     marginTop: 10,
     paddingHorizontal: 25,
     paddingVertical: 15,
-    backgroundColor: "#1e40af",
+    backgroundColor: "#ea580c",
     borderRadius: 25,
-    width: "80%",
-    alignItems: "center",
+    width: '80%',
+    alignItems: 'center',
     marginBottom: 50,
   },
   materialsButtonText: {

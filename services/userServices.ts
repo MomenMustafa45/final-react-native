@@ -291,3 +291,38 @@ const addChildToParent = async (parent: string, userId: string) => {
     console.log("No such document!");
   }
 };
+
+export const getUserNameById = async (userId: string): Promise<string | null> => {
+  try {
+    const userDocRef = doc(db, "users", userId);
+    const userDocSnap = await getDoc(userDocRef);
+
+    if (userDocSnap.exists()) {
+      return userDocSnap.data().name; // إعادة اسم المستخدم
+    }
+
+    const teacherDocRef = doc(db, "teachers", userId);
+    const teacherDocSnap = await getDoc(teacherDocRef);
+    if (teacherDocSnap.exists()) {
+      return teacherDocSnap.data().name; // إعادة اسم المعلم
+    }
+
+    const parentDocRef = doc(db, "parents", userId);
+    const parentDocSnap = await getDoc(parentDocRef);
+    if (parentDocSnap.exists()) {
+      return parentDocSnap.data().name; // إعادة اسم الوالد
+    }
+
+    const studentDocRef = doc(db, "students", userId);
+    const studentDocSnap = await getDoc(studentDocRef);
+    if (studentDocSnap.exists()) {
+      return studentDocSnap.data().name; // إعادة اسم الطالب
+    }
+
+    console.log("No user found with this ID");
+    return null; // إذا لم يوجد مستخدم
+  } catch (error) {
+    console.error("Error fetching user name: ", error);
+    return null; // في حالة حدوث خطأ
+  }
+};
