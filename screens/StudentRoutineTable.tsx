@@ -106,32 +106,42 @@ const StudentRoutineTable = () => {
     </ImageBackground>
   );
 };
+const DaySchedule = ({ day }) => {
+  if (!day || !day.subjects) {
+    return <Text style={styles.noScheduleText}>No schedule yet for you</Text>;
+  }
 
-const DaySchedule = ({ day }) => (
-  <ScrollView>
-    <View style={styles.tableContainer}>
-      {day.subjects.map((subj, index) => {
-        const periodTime =
-          index === 0
-            ? "7:00-9:00"
-            : index === 1
-            ? "9:00-11:00"
-            : index === 2
-            ? "11:00-1:00"
-            : "1:00-3:00";
+  return (
+    <ScrollView>
+      <View style={styles.tableContainer}>
+        {day.subjects.length > 0 ? (
+          day.subjects.map((subj, index) => {
+            const periodTime =
+              index === 0
+                ? "7:00-9:00"
+                : index === 1
+                ? "9:00-11:00"
+                : index === 2
+                ? "11:00-1:00"
+                : "1:00-3:00";
 
-        return (
-          <View key={index} style={styles.card}>
-            <Text style={styles.periodNumber}>Period {index + 1}</Text>
-            <Text style={styles.subjectName}>{subj.subject_name}</Text>
-            <Text style={styles.teacherName}>{subj.teacher_name.name}</Text>
-            <Text style={styles.periodTime}>{periodTime}</Text>
-          </View>
-        );
-      })}
-    </View>
-  </ScrollView>
-);
+            return (
+              <View key={index} style={styles.card}>
+                <Text style={styles.periodNumber}>Period {index + 1}</Text>
+                <Text style={styles.subjectName}>{subj.subject_name}</Text>
+                <Text style={styles.teacherName}>{subj.teacher_name.name}</Text>
+                <Text style={styles.periodTime}>{periodTime}</Text>
+              </View>
+            );
+          })
+        ) : (
+          <Text style={styles.noScheduleText}>No schedule yet for you</Text>
+        )}
+      </View>
+    </ScrollView>
+  );
+};
+
 
 const styles = StyleSheet.create({
   background: {
@@ -170,6 +180,13 @@ const styles = StyleSheet.create({
   periodTime: {
     fontSize: 12,
     color: "#ea580c",
+  },
+  noScheduleText: {
+    textAlign: "center",
+    fontSize: 18,
+    color: "#ea580c",
+    marginTop: 200,
+    
   },
 });
 

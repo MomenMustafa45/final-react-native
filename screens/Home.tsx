@@ -52,20 +52,23 @@ const Home = () => {
       return ![
         "routine",
         "grade",
-        "quiz",
+        "quizList",
         "Subjects",
         "attendance",
         "TeacherTable",
+        "chat"
       ].includes(item.screen);
     }
     if (userInfo.role === "teacher") {
       return ![
         "routine",
         "grade",
-        "quiz",
+        "quizList",
         "Subjects",
         "kidsRoutine",
         "KidsGrade",
+         "parentAttendance",
+         "attendance"
       ].includes(item.screen);
     }
     if (userInfo.role === "student") {

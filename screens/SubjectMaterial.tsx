@@ -5,35 +5,28 @@ import {
   StyleSheet,
   ImageBackground,
   FlatList,
+  Modal,
+  TouchableOpacity,
+  TextInput,
+  Linking,
 } from "react-native";
-import { useRoute } from "@react-navigation/native"; // لاستخدام الـ Route
 import { ResizeMode, Video } from "expo-av";
-
 import { collection, getDocs, query, where } from "firebase/firestore";
-import { SubjectType } from "../utils/types";
 import { db } from "../config/firebase";
-import { TextInput } from "react-native";
 
-function SubjectDetails() {
-  const route = useRoute<any>();
+function SubjectDetails({ route }) {
   const { subjectId } = route.params || {};
   const [subjects, setSubjects] = useState<any[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
-  const [selectedVideo, setSelectedVideo] = useState<{
-    url: string | null;
-    type: string;
+  const [selectedLesson, setSelectedLesson] = useState<{
+    videoUrl: string | null;
+    pdfUrl: string | null;
     lessonName: string;
   } | null>(null);
 
   useEffect(() => {
-    if (!subjectId) {
-      setError("Subject ID is missing");
-      setLoading(false);
-      return;
-    }
-
     const fetchVideos = async () => {
       try {
         const subjectsCollection = collection(db, "subjects");
@@ -74,40 +67,32 @@ function SubjectDetails() {
   );
 
   const handleSelectItem = (
-    url: string | null,
-    type: string,
+    videoUrl: string | null,
+    pdfUrl: string | null,
     lessonName: string
   ) => {
-    setSelectedVideo({ url, type, lessonName });
+    setSelectedLesson({ videoUrl, pdfUrl, lessonName });
   };
 
   const handleClose = () => {
-    setSelectedVideo(null); // Close the displayed video or PDF
+    setSelectedLesson(null); // Close the displayed video or PDF
   };
 
-  if (loading) return <Text className="text-center">Loading...</Text>;
-  if (error) return <Text className="text-center text-red-600">{error}</Text>;
-
-  const hasContent = subjects.some(
-    (subject) => subject.videoUrls && subject.videoUrls.length > 0
-  );
-
-  console.log(filteredVideos);
+  if (loading) return <Text style={styles.loadingText}>Loading...</Text>;
+  if (error) return <Text style={styles.errorText}>{error}</Text>;
 
   return (
     <ImageBackground
-      source={{ uri: subjects[0].photoURL }} // Background image for the subject
+      source={{ uri: subjects[0]?.photoURL }} // Background image for the subject
       style={styles.background}
       resizeMode="cover"
     >
       <View style={styles.container}>
-        {/* Subject information */}
         <View style={styles.subjectInfo}>
-          <Text style={styles.title}>{subjects[0].name}</Text>
-          <Text style={styles.description}>{subjects[0].description}</Text>
+          <Text style={styles.title}>{subjects[0]?.name}</Text>
+          <Text style={styles.description}>{subjects[0]?.description}</Text>
         </View>
 
-        {/* Search bar */}
         <TextInput
           style={styles.searchBar}
           placeholder="Search by lesson name..."
@@ -115,25 +100,53 @@ function SubjectDetails() {
           onChangeText={(text) => setSearchTerm(text)}
         />
 
-        {/* Video List */}
         <FlatList
           data={filteredVideos}
           keyExtractor={(item, index) => index.toString()}
-          renderItem={({ item, index }) => (
-            <View style={styles.videoContainer}>
-              <Text style={styles.lessonName}>
-                {subjects[0].lessonNames[index]}
-              </Text>
+          renderItem={({ item }) => (
+            <TouchableOpacity
+              style={styles.lessonContainer}
+              onPress={() =>
+                handleSelectItem(item.videoUrl, item.pdfUrl, item.lessonName)
+              }
+            >
+              <Text style={styles.lessonName}>{item.lessonName}</Text>
+            </TouchableOpacity>
+          )}
+          contentContainerStyle={styles.lessonList}
+        />
+      </View>
+
+      <Modal visible={!!selectedLesson} animationType="slide">
+        <View style={styles.modalContent}>
+          {selectedLesson && (
+            <>
+              <Text style={styles.modalTitle}>{selectedLesson.lessonName}</Text>
               <Video
-                source={{ uri: item.videoUrl }} // Display video from URLs
+                source={{ uri: selectedLesson.videoUrl }}
                 style={styles.video}
                 useNativeControls
                 resizeMode={ResizeMode.CONTAIN}
               />
-            </View>
+              {selectedLesson.pdfUrl && (
+                <TouchableOpacity
+                  onPress={() => {
+                    Linking.openURL(selectedLesson.pdfUrl);
+                  }}
+                >
+                  <Text style={styles.pdfLink}>View PDF</Text>
+                </TouchableOpacity>
+              )}
+              <TouchableOpacity
+                onPress={handleClose}
+                style={styles.closeButton}
+              >
+                <Text style={styles.closeButtonText}>Close</Text>
+              </TouchableOpacity>
+            </>
           )}
-        />
-      </View>
+        </View>
+      </Modal>
     </ImageBackground>
   );
 }
@@ -141,15 +154,15 @@ function SubjectDetails() {
 const styles = StyleSheet.create({
   background: {
     flex: 1,
-    justifyContent: "center",
   },
   container: {
     flex: 1,
     padding: 20,
-    backgroundColor: "rgba(255, 255, 255, 0.8)", // خلفية شفافة فوق الصورة
+    backgroundColor: "rgba(255, 255, 255, 0.9)", // Transparent background
   },
   subjectInfo: {
     marginBottom: 20,
+    alignItems: "center",
   },
   title: {
     fontSize: 24,
@@ -162,12 +175,65 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     textAlign: "center",
   },
-  videoContainer: {
+  searchBar: {
+    borderWidth: 1,
+    borderColor: "#ccc",
+    borderRadius: 8,
+    padding: 10,
     marginBottom: 20,
+  },
+  lessonContainer: {
+    padding: 15,
+    backgroundColor: "#f5f6fc",
+    borderRadius: 10,
+    marginBottom: 10,
+    elevation: 1,
+  },
+  lessonName: {
+    fontSize: 18,
+  },
+  lessonList: {
+    paddingBottom: 100,
+  },
+  modalContent: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    padding: 20,
+    backgroundColor: "#fff",
+  },
+  modalTitle: {
+    fontSize: 22,
+    fontWeight: "bold",
+    marginBottom: 10,
   },
   video: {
     width: "100%",
     height: 200,
+  },
+  pdfLink: {
+    color: "#1e90ff",
+    marginVertical: 10,
+    textDecorationLine: "underline",
+  },
+  closeButton: {
+    marginTop: 20,
+    padding: 10,
+    backgroundColor: "#ea580c",
+    borderRadius: 5,
+  },
+  closeButtonText: {
+    color: "#fff",
+    fontWeight: "bold",
+  },
+  loadingText: {
+    textAlign: "center",
+    fontSize: 18,
+  },
+  errorText: {
+    textAlign: "center",
+    fontSize: 18,
+    color: "red",
   },
 });
 

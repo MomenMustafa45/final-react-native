@@ -3,7 +3,6 @@ import {
   Text,
   ImageBackground,
   StyleSheet,
-  Image,
   ActivityIndicator,
 } from "react-native";
 import React, { useEffect, useState } from "react";
@@ -19,8 +18,9 @@ const QuizList = () => {
   const [quizSubjects, setQuizSubjects] = useState([]);
   const [isloading, setIsLoading] = useState(false);
 
-  const studentInfo = useAppSelector((state) => state.user.user); // Assuming student ID is here
+  const studentInfo = useAppSelector((state) => state.user.user);
   const navigation = useNavigation<RootNavigationParamList>();
+
   useEffect(() => {
     const fetchQuizNotifications = async () => {
       try {
@@ -35,20 +35,23 @@ const QuizList = () => {
         // Loop through each subject
         for (const subjectDoc of subjectsSnapshot.docs) {
           const subjectData = subjectDoc.data();
+          const { visitedExam = [], name, level_id } = subjectData; // تأكد من إضافة مستوى المادة هنا
 
-          // Check the visitedExam array
-          const { visitedExam = [], name } = subjectData;
+          // تحقق من مستوى الطالب
+          if (level_id !== studentInfo.level) {
+            continue; // تخطي إذا كان المستوى لا يتطابق
+          }
 
           // Skip subjects where the student has already taken the exam
           if (visitedExam.includes(studentInfo.id)) {
-            continue; // Skip this subject if the student ID is present in visitedExam
+            continue;
           }
 
           // Reference to the quiz subcollection
           const quizRef = collection(db, "subjects", subjectDoc.id, "quiz");
           const quizSnapshot = await getDocs(quizRef);
 
-          // Check if the quiz collection has 20 or more documents
+          // Check if the quiz collection has at least 1 document
           if (quizSnapshot.size >= 1) {
             notificationSubjects.push({
               id: subjectDoc.id,
@@ -60,15 +63,15 @@ const QuizList = () => {
 
         // Set the subjects that meet the criteria
         setQuizSubjects([...notificationSubjects]);
-        console.log(quizSubjects);
         setIsLoading(false);
       } catch (error) {
         console.error("Error fetching quiz notifications: ", error);
+        setIsLoading(false);
       }
     };
 
     fetchQuizNotifications();
-  }, [studentInfo.id]);
+  }, [studentInfo.id, studentInfo.level]); // تأكد من إضافة level هنا
 
   const handleButtonClick = (subjectId: string) => {
     navigation.navigate("quiz", { subjectId });
@@ -143,11 +146,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     padding: 20,
   },
-  stretch: {
-    width: 100, // Adjust width as needed
-    height: 100, // Adjust height as needed
-    resizeMode: "cover", // Ensures the image covers the area without stretching
-  },
   greetingContainer: {
     marginBottom: 20,
     flexDirection: "row",
@@ -156,7 +154,6 @@ const styles = StyleSheet.create({
   greetingText: {
     fontWeight: "bold",
     fontSize: 20,
-    // marginBottom: 10,
   },
   cardContainer: {
     justifyContent: "center",
@@ -174,7 +171,6 @@ const styles = StyleSheet.create({
   },
   iconContainer: {
     alignItems: "center",
-    // padding: 15,
   },
   subjectName: {
     fontWeight: "bold",
@@ -187,7 +183,6 @@ const styles = StyleSheet.create({
     color: "#6b7280",
     fontSize: 14,
     textAlign: "center",
-    // marginBottom: 10,
     paddingHorizontal: 5,
   },
   materialsButton: {
@@ -210,6 +205,5 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: "#fff",
-    zIndex: 20,
   },
 });
