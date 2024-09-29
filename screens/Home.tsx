@@ -56,7 +56,7 @@ const Home = () => {
         "Subjects",
         "attendance",
         "TeacherTable",
-        "chat"
+        "chat",
       ].includes(item.screen);
     }
     if (userInfo.role === "teacher") {
@@ -67,8 +67,8 @@ const Home = () => {
         "Subjects",
         "kidsRoutine",
         "KidsGrade",
-         "parentAttendance",
-         "attendance"
+        "parentAttendance",
+        "attendance",
       ].includes(item.screen);
     }
     if (userInfo.role === "student") {
@@ -78,6 +78,9 @@ const Home = () => {
         "TeacherTable",
         "parentAttendance",
       ].includes(item.screen);
+    }
+    if (userInfo.religion !== "muslim") {
+      return !["quran"].includes(item.screen);
     }
     return true;
   });
