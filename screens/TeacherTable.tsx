@@ -33,6 +33,7 @@ const TeacherTable = () => {
     { key: "thursday", title: "Thurs" },
   ]);
   const [schedules, setSchedules] = useState(null);
+  const [loading, setLoading] = useState(true); // حالة التحميل
 
   const teacherInfo = useAppSelector((state) => state.user.user);
 
@@ -43,10 +44,12 @@ const TeacherTable = () => {
       if (fetchedSchedules.length > 0) {
         setSchedules(fetchedSchedules[0]); // استخدام الكائن الأول
       } else {
-        console.error("No schedules found.");
+        setSchedules(null); // في حال عدم وجود جداول
       }
     } catch (error) {
       console.error("Error fetching schedules: ", error);
+    } finally {
+      setLoading(false); // إيقاف حالة التحميل بعد المحاولة
     }
   };
 
@@ -54,8 +57,24 @@ const TeacherTable = () => {
     fetchSchedules();
   }, [teacherInfo.id]);
 
-  if (!schedules || !schedules.days || schedules.days.length < 5) {
+  // في حال التحميل
+  if (loading) {
     return <Loader />;
+  }
+
+  // في حال عدم وجود جدول
+  if (!schedules || !schedules.days || schedules.days.length < 5) {
+    return (
+      <ImageBackground
+        source={require("../assets/images/home2.png")}
+        style={styles.background}
+      >
+        <Headero />
+        <View style={styles.noScheduleContainer}>
+          <Text style={styles.noScheduleText}>No schedule found.</Text>
+        </View>
+      </ImageBackground>
+    );
   }
 
   const renderScene = SceneMap({
@@ -98,8 +117,7 @@ const DaySchedule = ({ day, levelName }) => (
           <View key={index} style={styles.card}>
             <Text style={styles.periodNumber}>Period {index + 1}</Text>
             <Text style={styles.subjectName}>{subj.subject_name}</Text>
-      <Text style={styles.levelTitle}>Level: {levelName}</Text>
-
+            <Text style={styles.levelTitle}>Level: {levelName}</Text>
             <Text style={styles.periodTime}>{periodTime}</Text>
           </View>
         );
@@ -150,6 +168,15 @@ const styles = StyleSheet.create({
   },
   periodTime: {
     fontSize: 12,
+    color: "#ea580c",
+  },
+  noScheduleContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  noScheduleText: {
+    fontSize: 18,
     color: "#ea580c",
   },
 });

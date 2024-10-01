@@ -39,8 +39,8 @@ const Home = () => {
     { iconName: "phone", text: "Ask Doubts", screen: "contact" },
     { iconName: "image", text: "School Gallery", screen: "gallary" },
     { iconName: "comments", text: "Class Chat", screen: "chat" },
-
-    // { iconName: "image", text: "School gallary", screen: "gallary" },
+    { iconName: "comments", text: "Classes Chat", screen: "Chat" },
+  
     { iconName: "qrcode", text: "Attendance", screen: "attendance" },
     { iconName: "check", text: "Kids Attendance", screen: "parentAttendance" },
     { iconName: "calendar", text: "Calendar", screen: "calendar" },
@@ -57,6 +57,7 @@ const Home = () => {
         "attendance",
         "TeacherTable",
         "chat",
+        "Chat"
       ].includes(item.screen);
     }
     if (userInfo.role === "teacher") {
@@ -69,6 +70,8 @@ const Home = () => {
         "KidsGrade",
         "parentAttendance",
         "attendance",
+        "chat",
+
       ].includes(item.screen);
     }
     if (userInfo.role === "student") {
@@ -77,6 +80,7 @@ const Home = () => {
         "KidsGrade",
         "TeacherTable",
         "parentAttendance",
+        "Chat"
       ].includes(item.screen);
     }
     if (userInfo.religion !== "muslim") {

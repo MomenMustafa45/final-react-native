@@ -313,7 +313,6 @@ const ParentAttendance = () => {
       style={styles.background}
     >
       <View style={styles.container}>
-        <Text style={styles.header}>My Kids</Text>
 
         <View style={styles.form}>
           <Picker
@@ -370,6 +369,13 @@ const styles = StyleSheet.create({
     textAlign: "center",
     marginBottom: 20,
     color: "#4A4A4A",
+  },
+  picker: {
+    height: 50,
+    width: "100%",
+    marginBottom: 20,
+    // marginTop:130,
+    color:"#002749"
   },
   form: {
     marginBottom: 20,
