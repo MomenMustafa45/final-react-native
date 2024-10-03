@@ -82,10 +82,10 @@ function SubjectDetails({ route }) {
   if (error) return <Text style={styles.errorText}>{error}</Text>;
 
   return (
-    <ImageBackground
-      source={{ uri: subjects[0]?.photoURL }} // Background image for the subject
+    <View
+      // source={{ uri: subjects[0]?.photoURL }} // Background image for the subject
       style={styles.background}
-      resizeMode="cover"
+      // resizeMode="cover"
     >
       <View style={styles.container}>
         <View style={styles.subjectInfo}>
@@ -147,7 +147,7 @@ function SubjectDetails({ route }) {
           )}
         </View>
       </Modal>
-    </ImageBackground>
+    </View>
   );
 }
 
