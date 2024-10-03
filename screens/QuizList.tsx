@@ -77,7 +77,7 @@ const QuizList = () => {
   if (isloading) {
     return (
       <ImageBackground
-        source={require("../assets/images/home-bg.jpeg")}
+        source={require("../assets/images/schaduel.png")}
         style={styles.loadingContainer}
       >
         <ActivityIndicator size="large" color="#4c73be" />

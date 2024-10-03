@@ -127,7 +127,7 @@ const Quiz = () => {
 
   return (
     <ImageBackground
-      source={require("../assets/images/home-bg.jpeg")}
+      source={require("../assets/images/home2.png")}
       style={styles.background}
     >
       <View className="bg-[#ffffff99] w-full mb-4 items-center justify-center p-5">
