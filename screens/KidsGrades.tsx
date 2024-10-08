@@ -51,8 +51,6 @@ const KidsGrades = () => {
       style={styles.background}
     >
       <View style={styles.container}>
-        {/* <Text style={styles.header}>My Kids</Text> */}
-
         <View style={styles.form}>
           <Picker
             selectedValue={selectedKid}
@@ -68,7 +66,7 @@ const KidsGrades = () => {
           <Button title="VIEW" onPress={handleViewGrades} color="#002749" />
         </View>
 
-        {loading && <Loader />} 
+        {loading && <Loader />}
 
         {error && <Text style={styles.error}>{error}</Text>}
 
@@ -77,23 +75,52 @@ const KidsGrades = () => {
             <View style={styles.gradeContainer}>
               <View style={styles.tableHeader}>
                 <Text style={styles.tableHeaderText}>Subject</Text>
+                <Text style={styles.tableHeaderText}>Quiz</Text>
+
                 <Text style={styles.tableHeaderText}>Grade</Text>
               </View>
 
-              {grades.map((item) => (
-                <View key={item.id} style={styles.tableRow}>
-                  <Text style={styles.tableCell}>{item.subjectName}</Text>
-                  <Text style={styles.tableCell}>{item.quizScore}</Text>
-                  <Text style={styles.tableCell}>{item.grade}</Text>
+              {grades.map((item, index) => (
+                <View
+                  key={item.id}
+                  style={[
+                    styles.tableRow,
+                    { backgroundColor: index % 2 === 0 ? "#ffdddd" : "#cce5ff" } // كل صف له لون مختلف
+                  ]}
+                >
+                  <Text
+                    style={[
+                      styles.tableCell,
+                      { backgroundColor: index % 2 === 0 ? "#93c5fd" : "#93c5fd" } // لون مخصص للخلية الأولى
+                    ]}
+                  >
+                    {item.subjectName}
+                  </Text>
+                  <Text
+                    style={[
+                      styles.tableCell,
+                      { backgroundColor: index % 2 === 0 ? "#fecaca" : "#fecaca" } // لون مخصص للخلية الثانية
+                    ]}
+                  >
+                    {item.quizScore}
+                  </Text>
+                  <Text
+                    style={[
+                      styles.tableCell,
+                      { backgroundColor: index % 2 === 0 ? "#fef08a" : "#fef08a" } // لون مخصص للخلية الثالثة
+                    ]}
+                  >
+                    {item.grade}
+                  </Text>
                 </View>
               ))}
             </View>
           </ScrollView>
         )}
-{selectedKid && grades.length === 0 && !loading && !error && (
-  <Text>No grades available for the selected kid.</Text>
-)}
 
+        {selectedKid && grades.length === 0 && !loading && !error && (
+          <Text>No grades available for the selected kid.</Text>
+        )}
       </View>
     </ImageBackground>
   );
@@ -108,14 +135,7 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 20,
     justifyContent: "center",
-    marginTop:150
-  },
-  header: {
-    fontSize: 24,
-    fontWeight: "bold",
-    textAlign: "center",
-    marginBottom: 20,
-    color: "#4A4A4A",
+    marginTop: 150,
   },
   form: {
     marginBottom: 20,
@@ -124,8 +144,8 @@ const styles = StyleSheet.create({
     height: 50,
     width: "100%",
     marginBottom: 20,
-    marginTop:150,
-    color:"#002749"
+    marginTop: 150,
+    color: "#002749",
   },
   gradeContainer: {
     backgroundColor: "#fff",
@@ -159,6 +179,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     flex: 1,
     textAlign: "center",
+    padding: 10,
   },
   error: {
     color: "red",

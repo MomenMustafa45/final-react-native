@@ -13,9 +13,15 @@ import { fetchSchedule } from "../services/scheduleServices";
 import { useAppSelector } from "../hooks/reduxHooks";
 import Headero from "./components/Header";
 import { Picker } from "@react-native-picker/picker"; // Updated import
+import { useDispatch, useSelector } from "react-redux";
+import { getKids } from "../Redux/Slices/KidsSlice";
 
 const KidsRoutine = () => {
   const [selectedKid, setSelectedKid] = useState("");
+  const kids = useSelector((state) => state.kids.kidsList);
+
+ // Fetching kids from the Redux store
+
   const [index, setIndex] = useState(0);
   const [routes] = useState([
     { key: "sunday", title: "Sun" },
@@ -24,12 +30,18 @@ const KidsRoutine = () => {
     { key: "wednesday", title: "Wed" },
     { key: "thursday", title: "Thu" },
   ]);
+  const userInfo = useAppSelector((state) => state.user.user);
+  const dispatch = useDispatch();
+
   const [scheduleTable, setScheduleTable] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-
-  const kids = useAppSelector((state) => state.kids.kidsList); // Fetching kids from the Redux store
-
+  useEffect(() => {
+    const parentId = userInfo.id;
+    if (parentId) {
+      dispatch(getKids(parentId));
+    }
+  }, [dispatch, userInfo.id]); 
   const handleViewSchedule = async () => {
     if (selectedKid) {
       setLoading(true);
@@ -82,7 +94,6 @@ const KidsRoutine = () => {
     >
       <Headero />
       <View style={styles.container}>
-        {/* <Text style={styles.header}>Select a Student</Text> */}
         <Picker
           selectedValue={selectedKid}
           onValueChange={(itemValue) => {
@@ -127,7 +138,7 @@ const DaySchedule = ({ day }) => {
     <ScrollView>
       <View style={styles.tableContainer}>
         {day.subjects.map((subj, index) => (
-          <View key={index} style={styles.card}>
+          <View key={subj.id || index} style={styles.card}>
             <Text style={styles.periodNumber}>Period {index + 1}</Text>
             <Text style={styles.subjectName}>{subj.subjectName}</Text>
             <Text style={styles.teacherName}>{subj.teacherName}</Text>
@@ -145,17 +156,11 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
-    // marginTop:150
-  },
-  header: {
-    fontSize: 24,
-    fontWeight: "bold",
-    marginBottom: 10,
   },
   picker: {
     height: 50,
     marginBottom: 20,
-    marginTop:50
+    marginTop: 50,
   },
   loadingContainer: {
     flex: 1,

@@ -83,7 +83,7 @@ const QuizList = () => {
 
   return (
     <ImageBackground
-      source={require("../assets/images/home-bg.jpeg")}
+      source={require("../assets/images/schaduel.png")}
       style={styles.background}
     >
       <View style={styles.container}>

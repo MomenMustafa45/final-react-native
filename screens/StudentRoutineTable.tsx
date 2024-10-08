@@ -74,7 +74,12 @@ const StudentRoutineTable = () => {
         })
       );
 
-      setScheduleTable({ ...schedule, days: updatedDays });
+      setScheduleTable({
+        ...schedule,
+        days: updatedDays,
+      });
+      setLoading(false);
+      console.log(scheduleTable);
     } catch (error) {
       console.log(error);
     }
