@@ -11,7 +11,7 @@ import { fetchSchedule } from "../services/scheduleServices";
 import { getLevelNameById } from "../services/levelsServices";
 import { getSubjectNameById } from "../services/subjectServices";
 import { getTeacherNameById } from "../services/teacherServices";
-import { useAppSelector } from "../hooks/reduxHooks"; 
+import { useAppSelector } from "../hooks/reduxHooks";
 import { Schedule } from "../utils/types";
 import Headero from "./components/Header";
 import Loader from "./components/Loader";
@@ -44,6 +44,7 @@ const StudentRoutineTable = () => {
   const getSchedule = async () => {
     try {
       const schedule = await fetchSchedule(userInfo.class_id);
+
       const levelName = await getLevelNameById(userInfo.class_id);
       setLevelName(levelName);
 
@@ -52,8 +53,12 @@ const StudentRoutineTable = () => {
           const updatedSubjects = await Promise.all(
             day.subjects.map(
               async (subject: { subject_id: string; teacher_id: string }) => {
-                const subjectName = await getSubjectNameById(subject.subject_id);
-                const teacherName = await getTeacherNameById(subject.teacher_id);
+                const subjectName = await getSubjectNameById(
+                  subject.subject_id
+                );
+                const teacherName = await getTeacherNameById(
+                  subject.teacher_id
+                );
                 return {
                   ...subject,
                   subject_name: subjectName,
@@ -142,7 +147,6 @@ const DaySchedule = ({ day }) => {
   );
 };
 
-
 const styles = StyleSheet.create({
   background: {
     flex: 1,
@@ -186,7 +190,6 @@ const styles = StyleSheet.create({
     fontSize: 18,
     color: "#ea580c",
     marginTop: 200,
-    
   },
 });
 
