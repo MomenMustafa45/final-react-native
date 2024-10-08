@@ -24,6 +24,8 @@ const QuizList = () => {
   useEffect(() => {
     const fetchQuizNotifications = async () => {
       try {
+        setIsLoading(true);
+
         const subjectsRef = collection(db, "subjects");
         const gradeQuery = query(
           subjectsRef,
@@ -55,6 +57,7 @@ const QuizList = () => {
         }
 
         setQuizSubjects([...notificationSubjects]);
+        setIsLoading(false);
       } catch (error) {
         console.error("Error fetching quiz notifications: ", error);
       }
