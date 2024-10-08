@@ -36,7 +36,6 @@ export const saveLoggedUser = async (
         )
       );
       dispatch(setUser(userDocSnap.data()));
-      console.log("Document data:", userDocSnap.data());
       return true;
     } else {
       console.log("No such document!");
@@ -292,7 +291,9 @@ const addChildToParent = async (parent: string, userId: string) => {
   }
 };
 
-export const getUserNameById = async (userId: string): Promise<string | null> => {
+export const getUserNameById = async (
+  userId: string
+): Promise<string | null> => {
   try {
     const userDocRef = doc(db, "users", userId);
     const userDocSnap = await getDoc(userDocRef);

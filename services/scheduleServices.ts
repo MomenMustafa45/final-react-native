@@ -42,7 +42,7 @@ export const fetchSchedule = async (levelId: string): Promise<ScheduleData> => {
       scheduleData.days = [];
 
       // Fetch each day subcollection
-      const days = ["sunday", "monday", "tuesday", "wednesday", "thursday"];
+      const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday"];
       for (const day of days) {
         const dayRef = collection(
           db,
@@ -93,6 +93,5 @@ export const fetchSchedule = async (levelId: string): Promise<ScheduleData> => {
     console.error("Error fetching schedule: ", error);
   }
 
-  console.log(scheduleData);
   return scheduleData;
 };

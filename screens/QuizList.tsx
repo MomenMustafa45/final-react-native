@@ -10,7 +10,7 @@ import { TouchableOpacity } from "react-native";
 import { FlatList } from "react-native-gesture-handler";
 import { useAppSelector } from "../hooks/reduxHooks";
 import { useNavigation } from "@react-navigation/native";
-import { collection, getDocs } from "firebase/firestore";
+import { collection, getDocs, query, where } from "firebase/firestore";
 import { db } from "../config/firebase";
 import { RootNavigationParamList } from "../navigation/Stack";
 
@@ -24,32 +24,28 @@ const QuizList = () => {
   useEffect(() => {
     const fetchQuizNotifications = async () => {
       try {
-        setIsLoading(true);
-
         const subjectsRef = collection(db, "subjects");
-        const subjectsSnapshot = await getDocs(subjectsRef);
+        const gradeQuery = query(
+          subjectsRef,
+          where("level_id", "==", studentInfo.class_id)
+        );
+        const subjectsSnapshot = await getDocs(gradeQuery);
 
         const notificationSubjects = [];
 
         for (const subjectDoc of subjectsSnapshot.docs) {
           const subjectData = subjectDoc.data();
-          const { visitedExam = [], name, level_id } = subjectData; 
+          const { visitedExam = [], name } = subjectData;
 
-          if (level_id !== studentInfo.level) {
-            continue;
-          }
-
-         
+          console.log(subjectData);
           if (visitedExam.includes(studentInfo.id)) {
             continue;
           }
 
-         
           const quizRef = collection(db, "subjects", subjectDoc.id, "quiz");
           const quizSnapshot = await getDocs(quizRef);
 
-         
-          if (quizSnapshot.size >= 1) {
+          if (quizSnapshot.size >= 5) {
             notificationSubjects.push({
               id: subjectDoc.id,
               name: name || "Unnamed Subject",
@@ -58,17 +54,14 @@ const QuizList = () => {
           }
         }
 
-       
         setQuizSubjects([...notificationSubjects]);
-        setIsLoading(false);
       } catch (error) {
         console.error("Error fetching quiz notifications: ", error);
-        setIsLoading(false);
       }
     };
 
     fetchQuizNotifications();
-  }, [studentInfo.id, studentInfo.level]); 
+  }, [studentInfo.id]);
 
   const handleButtonClick = (subjectId: string) => {
     navigation.navigate("quiz", { subjectId });
