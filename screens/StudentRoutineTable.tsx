@@ -44,7 +44,9 @@ const StudentRoutineTable = () => {
   const getSchedule = async () => {
     try {
       const schedule = await fetchSchedule(userInfo.class_id);
-      const levelName = await getLevelNameById(userInfo.class_id);
+      console.log(userInfo.class_id);
+
+      const levelName = await getLevelNameById(schedule.level_id);
       setLevelName(levelName);
 
       const updatedDays = await Promise.all(
@@ -52,8 +54,13 @@ const StudentRoutineTable = () => {
           const updatedSubjects = await Promise.all(
             day.subjects.map(
               async (subject: { subject_id: string; teacher_id: string }) => {
-                const subjectName = await getSubjectNameById(subject.subject_id);
-                const teacherName = await getTeacherNameById(subject.teacher_id);
+                const subjectName = await getSubjectNameById(
+                  subject.subject_id
+                );
+                const teacherName = await getTeacherNameById(
+                  subject.teacher_id
+                );
+
                 return {
                   ...subject,
                   subject_name: subjectName,
@@ -69,7 +76,12 @@ const StudentRoutineTable = () => {
         })
       );
 
-      setScheduleTable({ ...schedule, days: updatedDays });
+      setScheduleTable({
+        ...schedule,
+        days: updatedDays,
+      });
+      setLoading(false);
+      console.log(scheduleTable);
     } catch (error) {
       console.log(error);
     }
