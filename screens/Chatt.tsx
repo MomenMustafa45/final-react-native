@@ -91,10 +91,11 @@ const styles = StyleSheet.create({
   },
   message: {
     flexDirection: 'column', // استخدام عمود لعرض النصوص بشكل رأسي
-    marginBottom: 10,
+    marginBottom: 30,
     alignItems: 'flex-start',
     padding: 10,
     borderRadius: 10,
+    paddingBottom:10
   },
   sender: {
     fontWeight: 'bold',

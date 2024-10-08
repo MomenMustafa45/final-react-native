@@ -61,7 +61,7 @@ const styles = StyleSheet.create({
   },
   greetingText: {
     fontWeight: "bold",
-    fontSize: 20,
+    fontSize: 15,
     marginLeft: 10,
   },
   backButton: {

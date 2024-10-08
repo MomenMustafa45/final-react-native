@@ -87,16 +87,7 @@ const Contact = () => {
               />
             </View>
 
-            <View style={styles.inputContainer}>
-              <Text style={styles.label}>Subject</Text>
-              <TextInput
-                style={styles.input}
-                placeholder="Subject"
-                value={data.subject}
-                onChangeText={(text) => handleChange("subject", text)}
-              />
-            </View>
-
+         
             <View style={styles.inputContainer}>
               <Text style={styles.label}>Message *</Text>
               <TextInput
@@ -170,7 +161,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "600",
     color: "#ea580c",
-    marginBottom: 4,
+    marginBottom: 10,
   },
   input: {
     width: "100%",

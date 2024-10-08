@@ -26,32 +26,29 @@ const QuizList = () => {
       try {
         setIsLoading(true);
 
-        // Fetch all subjects
         const subjectsRef = collection(db, "subjects");
         const subjectsSnapshot = await getDocs(subjectsRef);
 
         const notificationSubjects = [];
 
-        // Loop through each subject
         for (const subjectDoc of subjectsSnapshot.docs) {
           const subjectData = subjectDoc.data();
-          const { visitedExam = [], name, level_id } = subjectData; // تأكد من إضافة مستوى المادة هنا
+          const { visitedExam = [], name, level_id } = subjectData; 
 
-          // تحقق من مستوى الطالب
           if (level_id !== studentInfo.level) {
-            continue; // تخطي إذا كان المستوى لا يتطابق
+            continue;
           }
 
-          // Skip subjects where the student has already taken the exam
+         
           if (visitedExam.includes(studentInfo.id)) {
             continue;
           }
 
-          // Reference to the quiz subcollection
+         
           const quizRef = collection(db, "subjects", subjectDoc.id, "quiz");
           const quizSnapshot = await getDocs(quizRef);
 
-          // Check if the quiz collection has at least 1 document
+         
           if (quizSnapshot.size >= 1) {
             notificationSubjects.push({
               id: subjectDoc.id,
@@ -61,7 +58,7 @@ const QuizList = () => {
           }
         }
 
-        // Set the subjects that meet the criteria
+       
         setQuizSubjects([...notificationSubjects]);
         setIsLoading(false);
       } catch (error) {
@@ -71,7 +68,7 @@ const QuizList = () => {
     };
 
     fetchQuizNotifications();
-  }, [studentInfo.id, studentInfo.level]); // تأكد من إضافة level هنا
+  }, [studentInfo.id, studentInfo.level]); 
 
   const handleButtonClick = (subjectId: string) => {
     navigation.navigate("quiz", { subjectId });
@@ -80,7 +77,7 @@ const QuizList = () => {
   if (isloading) {
     return (
       <ImageBackground
-        source={require("../assets/images/home-bg.jpeg")}
+        source={require("../assets/images/schaduel.png")}
         style={styles.loadingContainer}
       >
         <ActivityIndicator size="large" color="#4c73be" />

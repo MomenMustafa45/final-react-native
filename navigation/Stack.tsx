@@ -23,6 +23,8 @@ import ParentAttendance from "../screens/ParentAttendance";
 import QuizList from "../screens/QuizList";
 import QuranScreen from "../screens/QuranScreen";
 import { Action } from "@react-navigation/routers/lib/typescript/src/CommonActions";
+import StartMeetingScreen from "../screens/Meeting";
+import ChatTeacher from "../screens/components/TeacherChatGroups";
 
 export type RootNavigationParamList = {
   dispatch(arg0: Action): unknown;
@@ -49,6 +51,7 @@ export type RootNavigationParamList = {
   attendance: undefined;
   parentAttendance: undefined;
   calendar: undefined;
+  Chat: undefined;
 };
 
 const Stack = createStackNavigator<RootNavigationParamList>();
@@ -68,6 +71,8 @@ const StackNavigation = () => {
       <Stack.Screen name="grade" component={Grades} />
       <Stack.Screen name="quiz" component={Quiz} />
       <Stack.Screen name="chat" component={Chat} />
+      <Stack.Screen name="Chat" component={ChatTeacher} />
+
       <Stack.Screen name="TeacherTable" component={TeacherTable} />
 
       <Stack.Screen name="quizList" component={QuizList} />
@@ -81,6 +86,8 @@ const StackNavigation = () => {
 
       <Stack.Screen name="routine" component={StudentRoutineTable} />
       <Stack.Screen name="quran" component={QuranScreen} />
+      {/* <Stack.Screen name="StartMeetingScreen" component={StartMeetingScreen} /> */}
+
     </Stack.Navigator>
   );
 };

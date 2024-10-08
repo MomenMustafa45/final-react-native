@@ -77,12 +77,12 @@ const KidsRoutine = () => {
 
   return (
     <ImageBackground
-      source={require("../assets/images/home-bg.jpeg")}
+      source={require("../assets/images/bg.png")}
       style={styles.background}
     >
       <Headero />
       <View style={styles.container}>
-        <Text style={styles.header}>Select a Student</Text>
+        {/* <Text style={styles.header}>Select a Student</Text> */}
         <Picker
           selectedValue={selectedKid}
           onValueChange={(itemValue) => {
@@ -95,7 +95,7 @@ const KidsRoutine = () => {
             <Picker.Item key={kid.id} label={kid.name} value={kid.class_id} />
           ))}
         </Picker>
-        <Button title="View Schedule" onPress={handleViewSchedule} />
+        <Button title="View Schedule" onPress={handleViewSchedule} color="#002749" />
 
         {loading && (
           <View style={styles.loadingContainer}>
@@ -145,6 +145,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
+    // marginTop:150
   },
   header: {
     fontSize: 24,
@@ -154,6 +155,7 @@ const styles = StyleSheet.create({
   picker: {
     height: 50,
     marginBottom: 20,
+    marginTop:50
   },
   loadingContainer: {
     flex: 1,

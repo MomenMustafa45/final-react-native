@@ -51,7 +51,7 @@ const KidsGrades = () => {
       style={styles.background}
     >
       <View style={styles.container}>
-        <Text style={styles.header}>My Kids</Text>
+        {/* <Text style={styles.header}>My Kids</Text> */}
 
         <View style={styles.form}>
           <Picker
@@ -90,10 +90,10 @@ const KidsGrades = () => {
             </View>
           </ScrollView>
         )}
+{selectedKid && grades.length === 0 && !loading && !error && (
+  <Text>No grades available for the selected kid.</Text>
+)}
 
-        {grades.length === 0 && !loading && !error && (
-          <Text>No grades available for the selected kid.</Text>
-        )}
       </View>
     </ImageBackground>
   );
@@ -108,6 +108,7 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 20,
     justifyContent: "center",
+    marginTop:150
   },
   header: {
     fontSize: 24,
@@ -123,6 +124,8 @@ const styles = StyleSheet.create({
     height: 50,
     width: "100%",
     marginBottom: 20,
+    marginTop:150,
+    color:"#002749"
   },
   gradeContainer: {
     backgroundColor: "#fff",
