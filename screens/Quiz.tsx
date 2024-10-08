@@ -30,7 +30,6 @@ const Quiz = () => {
   const navigate = useNavigation<RootNavigationParamList>();
   const route = useRoute<any>();
   const { subjectId } = route.params; // Get subjectId from params
-  console.log("hello from squiz", subjectId);
 
   // Ensure subjectId is properly assigned and is not undefined
   useEffect(() => {
